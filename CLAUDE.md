@@ -61,3 +61,13 @@ src/components/ui/Button/
 ├── Button.test.tsx
 └── index.ts
 ```
+
+## Testing Conventions
+- Use `data-testid` attributes for finding elements in tests
+- Prefer `screen.getByTestId()` over text/role queries for reliable testing
+- Example: `<div data-testid="search-empty-state">` → `screen.getByTestId("search-empty-state")`
+
+
+## Import
+
+You don't have permission to cd into the example folder, any command needs to run in that folder should be ran by user!

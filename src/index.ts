@@ -1,8 +1,74 @@
 // Import styles (will be injected into JS bundle)
-import './styles.css'
+import "./styles.css";
 
 // Export utilities
-export { cn } from './lib/utils'
+export { cn } from "./lib/utils";
 
-// Export components (add as you create them)
-// export * from './components/ui/button'
+// Export hooks
+export {
+  useSearchAgent,
+  type UseSearchAgentOptions,
+  type UseSearchAgentReturn,
+  type ToolCallInfo,
+} from "./hooks";
+
+// Export search components
+export {
+  SearchTrigger,
+  type SearchTriggerProps,
+  type ShortcutConfig,
+} from "./components/search/SearchTrigger";
+
+export {
+  SearchCommand,
+  type SearchCommandProps,
+  type BaseSearchResult,
+  type SearchTypeConfig,
+  type SearchParams,
+} from "./components/search/SearchCommand";
+
+export {
+  SearchAgent,
+  type SearchAgentProps,
+  type SearchAgentHeaderConfig,
+  type SearchAgentInputConfig,
+  // Sub-components
+  MessageBubble,
+  StreamingIndicator,
+  FileResultCard,
+  type MessageBubbleProps,
+  type StreamingIndicatorProps,
+  type FileResultCardProps,
+  type FileData,
+  type ToolResultRenderers,
+  type ToolResultRendererProps,
+  type ToolAction,
+} from "./components/search/SearchAgent";
+
+// Export shadcn UI components
+export { Button, buttonVariants } from "./components/ui/button";
+export { Badge, badgeVariants } from "./components/ui/badge";
+export { ScrollArea, ScrollBar } from "./components/ui/scroll-area";
+export {
+  Command,
+  CommandDialog,
+  CommandInput,
+  CommandList,
+  CommandEmpty,
+  CommandGroup,
+  CommandItem,
+  CommandShortcut,
+  CommandSeparator,
+} from "./components/ui/command";
+export {
+  Dialog,
+  DialogPortal,
+  DialogOverlay,
+  DialogTrigger,
+  DialogClose,
+  DialogContent,
+  DialogHeader,
+  DialogFooter,
+  DialogTitle,
+  DialogDescription,
+} from "./components/ui/dialog";

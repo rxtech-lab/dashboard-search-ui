@@ -8,6 +8,7 @@ import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
+
 export default defineConfig({
   plugins: [
     tailwindcss(),
@@ -16,7 +17,9 @@ export default defineConfig({
       include: ['src'],
       exclude: ['src/**/*.test.tsx', 'src/**/*.test.ts'],
       tsconfigPath: './tsconfig.build.json',
-      rollupTypes: true,
+      // Disabled rollupTypes to avoid API Extractor TypeScript version mismatch warning
+      // Types will be generated as separate files instead of bundled
+      rollupTypes: false,
     }),
     cssInjectedByJsPlugin(),
   ],
@@ -26,6 +29,7 @@ export default defineConfig({
     },
   },
   build: {
+    sourcemap: true,
     lib: {
       entry: resolve(__dirname, 'src/index.ts'),
       name: 'SearchingUI',
@@ -33,7 +37,14 @@ export default defineConfig({
       formats: ['es'],
     },
     rollupOptions: {
-      external: ['react', 'react-dom', 'react/jsx-runtime'],
+      external: [
+        'react',
+        'react-dom',
+        'react/jsx-runtime',
+        // Externalize packages with browser-specific code to allow proper SSR handling
+        'react-markdown',
+        'framer-motion',
+      ],
       output: {
         globals: {
           react: 'React',
@@ -42,5 +53,5 @@ export default defineConfig({
         },
       },
     },
-  },
+  }
 })
