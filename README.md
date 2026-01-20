@@ -188,6 +188,28 @@ import { SearchCommand } from "searching-ui";
 | `agentConfig` | `Partial<SearchAgentProps>` | - | Agent configuration |
 | `placeholder` | `string` | `"Search..."` | Input placeholder |
 
+#### Customizing the AI Loading Indicator
+
+When using agent mode, you can customize the loading indicator shown while the AI is processing:
+
+```tsx
+import { Brain } from "lucide-react";
+
+<SearchCommand
+  open={open}
+  onOpenChange={setOpen}
+  onSearch={onSearch}
+  enableAgentMode
+  agentConfig={{
+    apiEndpoint: "/api/search-agent",
+    input: {
+      streamingText: "Thinking...",
+      streamingIcon: Brain,
+    },
+  }}
+/>
+```
+
 ### SearchAgent
 
 An AI-powered search agent component with streaming chat support.
@@ -244,6 +266,49 @@ import { SearchAgent } from "searching-ui";
 | `onClearHistory` | `() => void` | - | Clear history handler |
 | `header` | `SearchAgentHeaderConfig` | - | Header configuration |
 | `input` | `SearchAgentInputConfig` | - | Input configuration |
+
+#### Input Configuration
+
+The `input` prop accepts an `SearchAgentInputConfig` object:
+
+| Option | Type | Default | Description |
+|--------|------|---------|-------------|
+| `placeholder` | `string` | `"Ask a follow-up question..."` | Input placeholder when ready |
+| `placeholderProcessing` | `string` | `"Generating..."` | Input placeholder when processing |
+| `streamingText` | `ReactNode` | `"Searching..."` | Text or component shown in loading indicator |
+| `streamingIcon` | `ComponentType \| null` | `Loader2` | Custom spinner icon, or `null` to hide |
+
+**Example with custom streaming indicator:**
+
+```tsx
+import { Brain } from "lucide-react";
+
+<SearchAgent
+  apiEndpoint="/api/search-agent"
+  input={{
+    placeholder: "Ask me anything...",
+    streamingText: "Thinking...",
+    streamingIcon: Brain,
+  }}
+/>
+```
+
+**Example with fully custom content:**
+
+```tsx
+<SearchAgent
+  apiEndpoint="/api/search-agent"
+  input={{
+    streamingText: (
+      <span className="flex items-center gap-1">
+        <Brain className="h-3 w-3 animate-pulse" />
+        Analyzing your request...
+      </span>
+    ),
+    streamingIcon: null, // Hide default spinner since we include our own
+  }}
+/>
+```
 
 ## Hooks
 
@@ -350,11 +415,36 @@ Shows a loading indicator while the AI is generating.
 ```tsx
 import { StreamingIndicator } from "searching-ui";
 
+// Basic usage
+<StreamingIndicator text="Thinking..." />
+
+// Custom icons
 <StreamingIndicator
-  text="Thinking..."
+  text="Processing..."
   botIcon={CustomBotIcon}
+  loadingIcon={CustomSpinner}
+/>
+
+// Hide the spinner (when text includes its own)
+<StreamingIndicator
+  text={
+    <span className="flex items-center gap-1">
+      <Brain className="h-3 w-3 animate-pulse" />
+      Analyzing...
+    </span>
+  }
+  loadingIcon={null}
 />
 ```
+
+#### Props
+
+| Prop | Type | Default | Description |
+|------|------|---------|-------------|
+| `text` | `ReactNode` | `"Searching..."` | Text or component to display |
+| `botIcon` | `ComponentType` | `Bot` | Bot avatar icon |
+| `loadingIcon` | `ComponentType \| null` | `Loader2` | Spinner icon, or `null` to hide |
+| `className` | `string` | - | Additional class name |
 
 ### FileResultCard
 

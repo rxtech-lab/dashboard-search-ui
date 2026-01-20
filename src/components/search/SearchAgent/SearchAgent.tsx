@@ -50,6 +50,12 @@ export interface SearchAgentInputConfig {
 
   /** Placeholder when processing */
   placeholderProcessing?: string;
+
+  /** Text or component shown in loading indicator while streaming (default: "Searching...") */
+  streamingText?: ReactNode;
+
+  /** Custom spinner icon for loading indicator, or null to hide it */
+  streamingIcon?: ComponentType<{ className?: string }> | null;
 }
 
 /**
@@ -163,6 +169,8 @@ export function SearchAgent({
   const {
     placeholder = "Ask a follow-up question...",
     placeholderProcessing = "Generating...",
+    streamingText = "Searching...",
+    streamingIcon,
   } = inputConfig;
 
   const inputRef = useRef<HTMLInputElement>(null);
@@ -228,13 +236,21 @@ export function SearchAgent({
   };
 
   // Check if we should show loading indicator
-  const showLoadingIndicator =
-    isProcessing &&
-    !messages.some(
-      (m) =>
-        m.role === "assistant" &&
-        m.parts.some((p) => p.type === "text" || p.type.startsWith("tool-"))
-    );
+  // Show when processing and waiting for assistant response
+  const showLoadingIndicator = (() => {
+    if (!isProcessing) return false;
+
+    // If no messages, show loading
+    if (messages.length === 0) return true;
+
+    const lastMessage = messages[messages.length - 1];
+
+    // If the last message is from user, show loading (waiting for assistant to respond)
+    if (lastMessage.role === "user") return true;
+
+    // If the last message is from assistant, show loading only if it has no content yet
+    return !hasContent(lastMessage);
+  })();
 
   return (
     <motion.div
@@ -327,7 +343,7 @@ export function SearchAgent({
                 {renderStreamingIndicator ? (
                   renderStreamingIndicator()
                 ) : (
-                  <StreamingIndicator />
+                  <StreamingIndicator text={streamingText} loadingIcon={streamingIcon} />
                 )}
               </motion.div>
             )}

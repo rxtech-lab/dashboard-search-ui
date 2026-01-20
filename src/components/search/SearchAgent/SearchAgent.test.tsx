@@ -147,4 +147,94 @@ describe("SearchAgent", () => {
     const sendButton = screen.getByRole("button", { name: /send/i });
     expect(sendButton).toBeDisabled();
   });
+
+  describe("loading indicator", () => {
+    it("shows loading indicator when processing first message", async () => {
+      const { useChat } = await import("@ai-sdk/react");
+      (useChat as ReturnType<typeof vi.fn>).mockReturnValue({
+        messages: [{ id: "1", role: "user", parts: [{ type: "text", text: "test" }] }],
+        sendMessage: mockSendMessage,
+        status: "streaming",
+        stop: mockStop,
+        error: undefined,
+        setMessages: mockSetMessages,
+      });
+
+      render(<SearchAgent />);
+      expect(screen.getByText("Searching...")).toBeInTheDocument();
+    });
+
+    it("shows loading indicator on follow-up message after previous response completed", async () => {
+      const { useChat } = await import("@ai-sdk/react");
+      (useChat as ReturnType<typeof vi.fn>).mockReturnValue({
+        messages: [
+          { id: "1", role: "user", parts: [{ type: "text", text: "first query" }] },
+          { id: "2", role: "assistant", parts: [{ type: "text", text: "first response" }] },
+          { id: "3", role: "user", parts: [{ type: "text", text: "follow-up" }] },
+          { id: "4", role: "assistant", parts: [] },  // Empty - streaming in progress
+        ],
+        sendMessage: mockSendMessage,
+        status: "streaming",
+        stop: mockStop,
+        error: undefined,
+        setMessages: mockSetMessages,
+      });
+
+      render(<SearchAgent />);
+      expect(screen.getByText("Searching...")).toBeInTheDocument();
+    });
+
+    it("shows loading indicator when last message is from user and processing", async () => {
+      const { useChat } = await import("@ai-sdk/react");
+      (useChat as ReturnType<typeof vi.fn>).mockReturnValue({
+        messages: [
+          { id: "1", role: "user", parts: [{ type: "text", text: "first query" }] },
+          { id: "2", role: "assistant", parts: [{ type: "text", text: "first response" }] },
+          { id: "3", role: "user", parts: [{ type: "text", text: "follow-up" }] },
+          // No assistant message yet - still waiting for response
+        ],
+        sendMessage: mockSendMessage,
+        status: "submitted",
+        stop: mockStop,
+        error: undefined,
+        setMessages: mockSetMessages,
+      });
+
+      render(<SearchAgent />);
+      expect(screen.getByText("Searching...")).toBeInTheDocument();
+    });
+
+    it("hides loading indicator when assistant message has content", async () => {
+      const { useChat } = await import("@ai-sdk/react");
+      (useChat as ReturnType<typeof vi.fn>).mockReturnValue({
+        messages: [
+          { id: "1", role: "user", parts: [{ type: "text", text: "test" }] },
+          { id: "2", role: "assistant", parts: [{ type: "text", text: "response" }] },
+        ],
+        sendMessage: mockSendMessage,
+        status: "streaming",
+        stop: mockStop,
+        error: undefined,
+        setMessages: mockSetMessages,
+      });
+
+      render(<SearchAgent />);
+      expect(screen.queryByText("Searching...")).not.toBeInTheDocument();
+    });
+
+    it("displays custom streaming text when provided", async () => {
+      const { useChat } = await import("@ai-sdk/react");
+      (useChat as ReturnType<typeof vi.fn>).mockReturnValue({
+        messages: [{ id: "1", role: "user", parts: [{ type: "text", text: "test" }] }],
+        sendMessage: mockSendMessage,
+        status: "streaming",
+        stop: mockStop,
+        error: undefined,
+        setMessages: mockSetMessages,
+      });
+
+      render(<SearchAgent input={{ streamingText: "Thinking..." }} />);
+      expect(screen.getByText("Thinking...")).toBeInTheDocument();
+    });
+  });
 });

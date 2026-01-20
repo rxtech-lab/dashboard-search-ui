@@ -265,10 +265,7 @@ export function SearchCommand<TResult extends BaseSearchResult = BaseSearchResul
 
   const handleClearChatHistory = () => {
     setChatHistory([]);
-    setMode("quick");
-    setTimeout(() => {
-      inputRef.current?.focus();
-    }, 100);
+    // Stay in agent mode - don't switch back to quick mode
   };
 
   const handleMessagesChange = useCallback(
@@ -360,7 +357,7 @@ export function SearchCommand<TResult extends BaseSearchResult = BaseSearchResul
     <CommandDialog
       open={open}
       onOpenChange={onOpenChange}
-      className={cn("max-w-2xl! overflow-hidden", className)}
+      className={cn("max-w-2xl! overflow-hidden ", className)}
       shouldFilter={false}
       showCloseButton
     >
@@ -390,26 +387,26 @@ export function SearchCommand<TResult extends BaseSearchResult = BaseSearchResul
               {isLoading
                 ? (renderLoading || defaultRenderLoading)()
                 : (
-                    <>
-                      {results.length === 0 && (
-                        renderEmpty
-                          ? renderEmpty(query, false)
-                          : defaultRenderEmpty(query)
-                      )}
+                  <>
+                    {results.length === 0 && (
+                      renderEmpty
+                        ? renderEmpty(query, false)
+                        : defaultRenderEmpty(query)
+                    )}
 
-                      {results.length > 0 && (
-                        <CommandGroup heading="Results">
-                          {results.map((result) =>
-                            renderResult
-                              ? renderResult(result, () => handleSelect(result))
-                              : defaultRenderResult(result, () =>
-                                  handleSelect(result)
-                                )
-                          )}
-                        </CommandGroup>
-                      )}
-                    </>
-                  )}
+                    {results.length > 0 && (
+                      <CommandGroup heading="Results">
+                        {results.map((result) =>
+                          renderResult
+                            ? renderResult(result, () => handleSelect(result))
+                            : defaultRenderResult(result, () =>
+                              handleSelect(result)
+                            )
+                        )}
+                      </CommandGroup>
+                    )}
+                  </>
+                )}
             </CommandList>
 
             {/* Footer */}
@@ -465,7 +462,6 @@ export function SearchCommand<TResult extends BaseSearchResult = BaseSearchResul
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: 30, scale: 0.98 }}
             transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
-            className="h-[700px]"
           >
             <SearchAgent
               initialQuery={agentQuery}

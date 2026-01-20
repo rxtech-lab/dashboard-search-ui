@@ -7,6 +7,7 @@ import {
   type BaseSearchResult,
 } from "@rx-lab/dashboard-searching-ui";
 import { toolRenderers } from "./components/tool-renderers";
+import { Brain } from "lucide-react";
 
 interface SearchResult extends BaseSearchResult {
   metadata?: {
@@ -157,6 +158,12 @@ export default function Dashboard() {
           },
           input: {
             placeholder: "Ask me anything about the codebase...",
+            streamingIcon: Brain,
+            streamingText: (
+              <span className="flex items-center">
+                Analyzing...
+              </span>
+            )
           },
         }}
         renderResult={(result, onSelect) => (

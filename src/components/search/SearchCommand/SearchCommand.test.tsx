@@ -8,20 +8,26 @@ const mockSendMessage = vi.fn();
 const mockStop = vi.fn();
 const mockSetMessages = vi.fn();
 
-vi.mock("@ai-sdk/react", () => ({
-  useChat: vi.fn(() => ({
-    messages: [],
-    sendMessage: mockSendMessage,
-    status: "ready",
-    stop: mockStop,
-    error: undefined,
-    setMessages: mockSetMessages,
-  })),
-  Chat: vi.fn().mockImplementation((config) => ({
-    ...config,
-    stop: mockStop,
-  })),
-}));
+vi.mock("@ai-sdk/react", () => {
+  class MockChat {
+    config: Record<string, unknown>;
+    constructor(config: Record<string, unknown>) {
+      this.config = config;
+    }
+    stop = mockStop;
+  }
+  return {
+    useChat: vi.fn(() => ({
+      messages: [],
+      sendMessage: mockSendMessage,
+      status: "ready",
+      stop: mockStop,
+      error: undefined,
+      setMessages: mockSetMessages,
+    })),
+    Chat: MockChat,
+  };
+});
 
 // Mock framer-motion
 vi.mock("framer-motion", () => ({
@@ -333,6 +339,100 @@ describe("SearchCommand", () => {
 
     await waitFor(() => {
       expect(screen.getByTestId("search-no-results")).toBeInTheDocument();
+    });
+  });
+
+  describe("clear chat functionality", () => {
+    it("stays in agent mode after clearing chat history", async () => {
+      const { useChat } = await import("@ai-sdk/react");
+      const mockUseChat = vi.mocked(useChat);
+
+      // Mock useChat to return messages so clear button is visible
+      mockUseChat.mockReturnValue({
+        messages: [
+          { id: "1", role: "user", content: "test query", parts: [] },
+          { id: "2", role: "assistant", content: "test response", parts: [] },
+        ],
+        sendMessage: mockSendMessage,
+        status: "ready",
+        stop: mockStop,
+        error: undefined,
+        setMessages: mockSetMessages,
+      } as ReturnType<typeof useChat>);
+
+      const user = userEvent.setup();
+      render(
+        <SearchCommand
+          {...defaultProps}
+          enableAgentMode
+          agentConfig={{ apiEndpoint: "/api/search-agent" }}
+          debounceMs={0}
+        />
+      );
+
+      // Type a query and press Enter to switch to agent mode
+      const input = screen.getByRole("combobox");
+      await user.type(input, "test query");
+      await user.keyboard("{Enter}");
+
+      // Should now be in agent mode - SearchAgent header should be visible
+      await waitFor(() => {
+        expect(screen.getByText("AI Search")).toBeInTheDocument();
+      });
+
+      // Click the clear button
+      const clearButton = screen.getByLabelText("Clear history");
+      await user.click(clearButton);
+
+      // Should still be in agent mode (SearchAgent header still visible)
+      expect(screen.getByText("AI Search")).toBeInTheDocument();
+
+      // Should NOT have switched back to quick mode (no search input visible)
+      expect(screen.queryByPlaceholderText(/Search.../)).not.toBeInTheDocument();
+    });
+
+    it("clears chat history when clear button is clicked", async () => {
+      const { useChat } = await import("@ai-sdk/react");
+      const mockUseChat = vi.mocked(useChat);
+
+      mockUseChat.mockReturnValue({
+        messages: [
+          { id: "1", role: "user", content: "test query", parts: [] },
+          { id: "2", role: "assistant", content: "test response", parts: [] },
+        ],
+        sendMessage: mockSendMessage,
+        status: "ready",
+        stop: mockStop,
+        error: undefined,
+        setMessages: mockSetMessages,
+      } as ReturnType<typeof useChat>);
+
+      const user = userEvent.setup();
+      render(
+        <SearchCommand
+          {...defaultProps}
+          enableAgentMode
+          agentConfig={{ apiEndpoint: "/api/search-agent" }}
+          chatHistoryStorageKey="test-chat-history"
+          debounceMs={0}
+        />
+      );
+
+      // Switch to agent mode
+      const input = screen.getByRole("combobox");
+      await user.type(input, "test query");
+      await user.keyboard("{Enter}");
+
+      await waitFor(() => {
+        expect(screen.getByText("AI Search")).toBeInTheDocument();
+      });
+
+      // Click the clear button
+      const clearButton = screen.getByLabelText("Clear history");
+      await user.click(clearButton);
+
+      // Session storage should be cleared
+      expect(sessionStorage.getItem("test-chat-history")).toBe("[]");
     });
   });
 });

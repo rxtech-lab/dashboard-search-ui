@@ -1,4 +1,6 @@
-import { simulateReadableStream } from "ai";
+import { streamText, simulateReadableStream, tool } from "ai";
+import { MockLanguageModelV3 } from "ai/test";
+import { z } from "zod";
 
 const README_CONTENT = `# searching-ui
 
@@ -62,62 +64,92 @@ export async function POST(req: Request) {
   const { messages } = await req.json();
   const userMessage = messages?.[messages.length - 1]?.content || "search";
 
-  // Generate unique IDs for this response
-  const messageId = `msg-${Date.now()}`;
-  const toolCallId1 = `call-search-${Date.now()}`;
-  const toolCallId2 = `call-display-${Date.now()}`;
-
   // Split README content into chunks for streaming effect
   const textChunks = README_CONTENT.match(/.{1,50}/g) || [];
 
-  const chunks: string[] = [
-    // Start message
-    `data: {"type":"start","messageId":"${messageId}"}\n\n`,
+  const searchFilesInput = JSON.stringify({ query: userMessage });
+  const displayResultsInput = JSON.stringify({ fileIds: ["1", "2", "3"] });
 
-    // Tool call: search_files
-    `data: {"type":"tool-call","toolCallId":"${toolCallId1}","toolName":"search_files","args":{"query":"${userMessage}"}}\n\n`,
+  const result = streamText({
+    model: new MockLanguageModelV3({
+      doStream: async () => ({
+        stream: simulateReadableStream({
+          initialDelayInMs: 2000,
+          chunkDelayInMs: 30,
+          chunks: [
+            // Tool call 1: search_files
+            { type: "tool-input-start", id: "call-1", toolName: "search_files" },
+            { type: "tool-input-delta", id: "call-1", delta: searchFilesInput },
+            { type: "tool-input-end", id: "call-1" },
+            {
+              type: "tool-call",
+              toolCallId: "call-1",
+              toolName: "search_files",
+              input: searchFilesInput,
+            },
 
-    // Tool result: search_files
-    `data: {"type":"tool-output-available","toolCallId":"${toolCallId1}","output":${JSON.stringify({
-      query: userMessage,
-      results: MOCK_SEARCH_RESULTS,
-    })}}\n\n`,
+            // Tool call 2: display_results
+            { type: "tool-input-start", id: "call-2", toolName: "display_results" },
+            { type: "tool-input-delta", id: "call-2", delta: displayResultsInput },
+            { type: "tool-input-end", id: "call-2" },
+            {
+              type: "tool-call",
+              toolCallId: "call-2",
+              toolName: "display_results",
+              input: displayResultsInput,
+            },
 
-    // Tool call: display_results
-    `data: {"type":"tool-call","toolCallId":"${toolCallId2}","toolName":"display_results","args":{"fileIds":["1","2","3"]}}\n\n`,
+            // Text streaming (README content in chunks)
+            { type: "text-start", id: "text-1" },
+            ...textChunks.map((chunk) => ({
+              type: "text-delta" as const,
+              id: "text-1",
+              delta: chunk,
+            })),
+            { type: "text-end", id: "text-1" },
 
-    // Tool result: display_results
-    `data: {"type":"tool-output-available","toolCallId":"${toolCallId2}","output":${JSON.stringify({
-      files: MOCK_FILES,
-    })}}\n\n`,
+            // Finish
+            {
+              type: "finish",
+              finishReason: { unified: "stop" as const, raw: undefined },
+              logprobs: undefined,
+              usage: {
+                inputTokens: {
+                  total: 10,
+                  noCache: 10,
+                  cacheRead: undefined,
+                  cacheWrite: undefined,
+                },
+                outputTokens: {
+                  total: 50,
+                  text: 50,
+                  reasoning: undefined,
+                },
+              },
+            },
+          ],
+        }),
+      }),
+    }),
+    tools: {
+      search_files: tool({
+        description: "Search for files",
+        inputSchema: z.object({ query: z.string() }),
+        execute: async ({ query }) => ({
+          query,
+          results: MOCK_SEARCH_RESULTS,
+        }),
+      }),
+      display_results: tool({
+        description: "Display file results",
+        inputSchema: z.object({ fileIds: z.array(z.string()) }),
+        execute: async () => ({
+          files: MOCK_FILES,
+        }),
+      }),
+    },
+    prompt: userMessage,
+  });
 
-    // Text streaming
-    `data: {"type":"text-start","id":"text-1"}\n\n`,
-    ...textChunks.map(
-      (chunk) =>
-        `data: {"type":"text-delta","id":"text-1","delta":${JSON.stringify(chunk)}}\n\n`
-    ),
-    `data: {"type":"text-end","id":"text-1"}\n\n`,
-
-    // Finish
-    `data: {"type":"finish"}\n\n`,
-    `data: [DONE]\n\n`,
-  ];
-
-  return new Response(
-    simulateReadableStream({
-      initialDelayInMs: 100,
-      chunkDelayInMs: 30,
-      chunks,
-    }).pipeThrough(new TextEncoderStream()),
-    {
-      status: 200,
-      headers: {
-        "Content-Type": "text/event-stream",
-        "Cache-Control": "no-cache",
-        Connection: "keep-alive",
-        "x-vercel-ai-ui-message-stream": "v1",
-      },
-    }
-  );
+  return result.toUIMessageStreamResponse();
 }
