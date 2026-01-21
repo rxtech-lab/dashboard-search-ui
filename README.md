@@ -16,9 +16,9 @@ A React component library for building AI-powered search interfaces with streami
 ## Installation
 
 ```bash
-npm install searching-ui
+npm install @rx-lab/dashboard-searching-ui
 # or
-bun add searching-ui
+bun add @rx-lab/dashboard-searching-ui
 ```
 
 ### Peer Dependencies
@@ -35,7 +35,7 @@ npm install @ai-sdk/react ai
 
 ```tsx
 import { useState } from "react";
-import { SearchTrigger, SearchCommand } from "searching-ui";
+import { SearchTrigger, SearchCommand } from "@rx-lab/dashboard-searching-ui";
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -66,7 +66,7 @@ function App() {
 
 ```tsx
 import { useState } from "react";
-import { SearchTrigger, SearchCommand } from "searching-ui";
+import { SearchTrigger, SearchCommand } from "@rx-lab/dashboard-searching-ui";
 
 function App() {
   const [open, setOpen] = useState(false);
@@ -99,7 +99,7 @@ function App() {
 A trigger button for opening the search dialog.
 
 ```tsx
-import { SearchTrigger } from "searching-ui";
+import { SearchTrigger } from "@rx-lab/dashboard-searching-ui";
 
 // Basic usage
 <SearchTrigger onClick={() => setOpen(true)} />
@@ -139,7 +139,7 @@ import { SearchTrigger } from "searching-ui";
 A search command dialog with optional AI agent mode.
 
 ```tsx
-import { SearchCommand } from "searching-ui";
+import { SearchCommand } from "@rx-lab/dashboard-searching-ui";
 
 <SearchCommand
   open={open}
@@ -215,7 +215,7 @@ import { Brain } from "lucide-react";
 An AI-powered search agent component with streaming chat support.
 
 ```tsx
-import { SearchAgent } from "searching-ui";
+import { SearchAgent } from "@rx-lab/dashboard-searching-ui";
 
 <SearchAgent
   initialQuery="Find all PDF documents"
@@ -348,7 +348,7 @@ import { Brain } from "lucide-react";
 A hook for managing AI chat state with the Vercel AI SDK.
 
 ```tsx
-import { useSearchAgent } from "searching-ui";
+import { useSearchAgent } from "@rx-lab/dashboard-searching-ui";
 
 function CustomChatInterface() {
   const {
@@ -427,7 +427,7 @@ function CustomChatInterface() {
 Renders a single chat message with support for tool results.
 
 ```tsx
-import { MessageBubble } from "searching-ui";
+import { MessageBubble } from "@rx-lab/dashboard-searching-ui";
 
 <MessageBubble
   message={message}
@@ -444,7 +444,7 @@ import { MessageBubble } from "searching-ui";
 Shows a loading indicator while the AI is generating.
 
 ```tsx
-import { StreamingIndicator } from "searching-ui";
+import { StreamingIndicator } from "@rx-lab/dashboard-searching-ui";
 
 // Basic usage
 <StreamingIndicator text="Thinking..." />
@@ -482,7 +482,7 @@ import { StreamingIndicator } from "searching-ui";
 A card component for displaying file results.
 
 ```tsx
-import { FileResultCard } from "searching-ui";
+import { FileResultCard } from "@rx-lab/dashboard-searching-ui";
 
 <FileResultCard
   file={{
@@ -542,7 +542,7 @@ import remarkGfm from 'remark-gfm'
 Use `toolResultRenderers` to provide custom renderers for specific tool outputs. Each renderer receives the tool's output and an action handler:
 
 ```tsx
-import { SearchAgent, ToolResultRendererProps, FileResultCard } from 'searching-ui'
+import { SearchAgent, ToolResultRendererProps, FileResultCard } from '@rx-lab/dashboard-searching-ui'
 
 // Custom renderer for file search results
 const FileResultsRenderer = ({ output, onAction }: ToolResultRendererProps) => {
@@ -607,7 +607,7 @@ interface ToolAction {
 For full control over message rendering, use `renderMessage` to override the entire message bubble:
 
 ```tsx
-import { UIMessage } from 'searching-ui'
+import { UIMessage } from '@rx-lab/dashboard-searching-ui'
 
 <SearchAgent
   apiEndpoint="/api/search-agent"
