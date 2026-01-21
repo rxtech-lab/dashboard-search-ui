@@ -18,6 +18,7 @@ function Command({
   return (
     <CommandPrimitive
       data-slot="command"
+      data-sui
       className={cn(
         "bg-popover text-popover-foreground flex h-full w-full flex-col overflow-hidden rounded-md",
         className,

@@ -11,6 +11,7 @@ function ScrollArea({
   return (
     <ScrollAreaPrimitive.Root
       data-slot="scroll-area"
+      data-sui
       className={cn("relative", className)}
       {...props}
     >

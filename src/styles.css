@@ -1,6 +1,20 @@
-@import "tailwindcss";
+/* Import Tailwind - preflight needed for utilities to work correctly */
+@import "tailwindcss/preflight" layer(base);
+@import "tailwindcss/theme" layer(theme);
+@import "tailwindcss/utilities" layer(utilities);
 
-:root {
+/* Scope preflight-like resets and variables to library components */
+[data-sui] {
+  /* Box sizing reset */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    border-width: 0;
+    border-style: solid;
+    border-color: var(--border, currentColor);
+  }
+
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
   --muted: oklch(0.97 0 0);
