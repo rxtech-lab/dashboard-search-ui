@@ -2,6 +2,10 @@
   "name": "@rx-lab/dashboard-searching-ui",
   "version": "1.0.0",
   "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rxtech-lab/dashboard-search-ui"
+  },
   "main": "./dist/searching-ui.js",
   "module": "./dist/searching-ui.js",
   "types": "./dist/index.d.ts",
