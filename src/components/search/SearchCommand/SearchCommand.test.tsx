@@ -59,7 +59,9 @@ vi.stubGlobal("sessionStorage", {
     delete mockSessionStorage[key];
   },
   clear: () => {
-    Object.keys(mockSessionStorage).forEach((key) => delete mockSessionStorage[key]);
+    Object.keys(mockSessionStorage).forEach(
+      (key) => delete mockSessionStorage[key],
+    );
   },
 });
 
@@ -107,10 +109,10 @@ describe("SearchCommand", () => {
     await waitFor(
       () => {
         expect(mockOnSearch).toHaveBeenCalledWith(
-          expect.objectContaining({ query: "test query" })
+          expect.objectContaining({ query: "test query" }),
         );
       },
-      { timeout: 500 }
+      { timeout: 500 },
     );
   });
 
@@ -129,7 +131,7 @@ describe("SearchCommand", () => {
 
     await waitFor(() => {
       expect(mockOnSearch).toHaveBeenCalledWith(
-        expect.objectContaining({ query: "test" })
+        expect.objectContaining({ query: "test" }),
       );
     });
 
@@ -150,7 +152,7 @@ describe("SearchCommand", () => {
         {...defaultProps}
         onResultSelect={mockOnResultSelect}
         debounceMs={0}
-      />
+      />,
     );
 
     // Verify the prop is accepted and component renders
@@ -167,7 +169,7 @@ describe("SearchCommand", () => {
             Custom: {result.title}
           </div>
         )}
-      />
+      />,
     );
 
     // Verify the prop is accepted and component renders
@@ -182,7 +184,7 @@ describe("SearchCommand", () => {
           { id: "fulltext", label: "Fulltext" },
           { id: "semantic", label: "Semantic" },
         ]}
-      />
+      />,
     );
 
     expect(screen.getByText("Fulltext")).toBeInTheDocument();
@@ -199,7 +201,7 @@ describe("SearchCommand", () => {
           { id: "semantic", label: "Semantic" },
         ]}
         debounceMs={0}
-      />
+      />,
     );
 
     await user.click(screen.getByText("Semantic"));
@@ -207,17 +209,19 @@ describe("SearchCommand", () => {
 
     await waitFor(() => {
       expect(mockOnSearch).toHaveBeenCalledWith(
-        expect.objectContaining({ searchType: "semantic" })
+        expect.objectContaining({ searchType: "semantic" }),
       );
     });
   });
 
   it("uses custom placeholder", () => {
     render(
-      <SearchCommand {...defaultProps} placeholder="Custom placeholder..." />
+      <SearchCommand {...defaultProps} placeholder="Custom placeholder..." />,
     );
 
-    expect(screen.getByPlaceholderText("Custom placeholder...")).toBeInTheDocument();
+    expect(
+      screen.getByPlaceholderText("Custom placeholder..."),
+    ).toBeInTheDocument();
   });
 
   it("shows AI hint when enableAgentMode is true", () => {
@@ -246,7 +250,7 @@ describe("SearchCommand", () => {
 
   it("renders loading state", async () => {
     mockOnSearch.mockImplementation(
-      () => new Promise((resolve) => setTimeout(() => resolve([]), 1000))
+      () => new Promise((resolve) => setTimeout(() => resolve([]), 1000)),
     );
 
     const user = userEvent.setup();
@@ -262,7 +266,7 @@ describe("SearchCommand", () => {
 
   it("renders custom loading using renderLoading prop", async () => {
     mockOnSearch.mockImplementation(
-      () => new Promise((resolve) => setTimeout(() => resolve([]), 100))
+      () => new Promise((resolve) => setTimeout(() => resolve([]), 100)),
     );
 
     const user = userEvent.setup();
@@ -271,7 +275,7 @@ describe("SearchCommand", () => {
         {...defaultProps}
         debounceMs={0}
         renderLoading={() => <div data-testid="custom-loading">Loading...</div>}
-      />
+      />,
     );
 
     await user.type(screen.getByRole("combobox"), "test");
@@ -282,7 +286,9 @@ describe("SearchCommand", () => {
   });
 
   it("calls onSearch with limit parameter", async () => {
-    mockOnSearch.mockResolvedValue([{ id: "1", title: "Result 1", score: 0.85 }]);
+    mockOnSearch.mockResolvedValue([
+      { id: "1", title: "Result 1", score: 0.85 },
+    ]);
 
     const user = userEvent.setup();
     render(<SearchCommand {...defaultProps} debounceMs={0} limit={5} />);
@@ -291,15 +297,13 @@ describe("SearchCommand", () => {
 
     await waitFor(() => {
       expect(mockOnSearch).toHaveBeenCalledWith(
-        expect.objectContaining({ limit: 5 })
+        expect.objectContaining({ limit: 5 }),
       );
     });
   });
 
   it("does not show empty state when results are displayed", async () => {
-    const results = [
-      { id: "1", title: "Result 1", snippet: "Description 1" },
-    ];
+    const results = [{ id: "1", title: "Result 1", snippet: "Description 1" }];
     mockOnSearch.mockResolvedValue(results);
 
     const user = userEvent.setup();
@@ -367,7 +371,7 @@ describe("SearchCommand", () => {
           enableAgentMode
           agentConfig={{ apiEndpoint: "/api/search-agent" }}
           debounceMs={0}
-        />
+        />,
       );
 
       // Type a query and press Enter to switch to agent mode
@@ -388,7 +392,9 @@ describe("SearchCommand", () => {
       expect(screen.getByText("AI Search")).toBeInTheDocument();
 
       // Should NOT have switched back to quick mode (no search input visible)
-      expect(screen.queryByPlaceholderText(/Search.../)).not.toBeInTheDocument();
+      expect(
+        screen.queryByPlaceholderText(/Search.../),
+      ).not.toBeInTheDocument();
     });
 
     it("clears chat history when clear button is clicked", async () => {
@@ -415,7 +421,7 @@ describe("SearchCommand", () => {
           agentConfig={{ apiEndpoint: "/api/search-agent" }}
           chatHistoryStorageKey="test-chat-history"
           debounceMs={0}
-        />
+        />,
       );
 
       // Switch to agent mode

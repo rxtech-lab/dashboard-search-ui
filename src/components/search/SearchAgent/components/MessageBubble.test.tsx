@@ -52,7 +52,11 @@ describe("MessageBubble", () => {
       id: "1",
       role: "assistant",
       parts: [
-        { type: "tool-search_files", toolCallId: "tc1", state: "pending" } as never,
+        {
+          type: "tool-search_files",
+          toolCallId: "tc1",
+          state: "pending",
+        } as never,
       ],
     };
 
@@ -103,7 +107,7 @@ describe("MessageBubble", () => {
       <MessageBubble
         message={message}
         toolResultRenderers={{ custom_tool: CustomRenderer }}
-      />
+      />,
     );
 
     expect(screen.getByTestId("custom-renderer")).toBeInTheDocument();
@@ -144,11 +148,14 @@ describe("MessageBubble", () => {
         message={message}
         toolResultRenderers={{ action_tool: ActionRenderer }}
         onToolAction={onToolAction}
-      />
+      />,
     );
 
     fireEvent.click(screen.getByTestId("action-button"));
-    expect(onToolAction).toHaveBeenCalledWith({ type: "click", payload: { id: 123 } });
+    expect(onToolAction).toHaveBeenCalledWith({
+      type: "click",
+      payload: { id: 123 },
+    });
   });
 
   it("uses custom user content renderer", () => {
@@ -164,10 +171,12 @@ describe("MessageBubble", () => {
         renderUserContent={(content) => (
           <span data-testid="custom-user-content">{content.toUpperCase()}</span>
         )}
-      />
+      />,
     );
 
-    expect(screen.getByTestId("custom-user-content")).toHaveTextContent("HELLO");
+    expect(screen.getByTestId("custom-user-content")).toHaveTextContent(
+      "HELLO",
+    );
   });
 
   it("uses custom assistant content renderer", () => {
@@ -181,12 +190,16 @@ describe("MessageBubble", () => {
       <MessageBubble
         message={message}
         renderAssistantContent={(content) => (
-          <span data-testid="custom-assistant-content">{content.toLowerCase()}</span>
+          <span data-testid="custom-assistant-content">
+            {content.toLowerCase()}
+          </span>
         )}
-      />
+      />,
     );
 
-    expect(screen.getByTestId("custom-assistant-content")).toHaveTextContent("hello");
+    expect(screen.getByTestId("custom-assistant-content")).toHaveTextContent(
+      "hello",
+    );
   });
 
   it("renders multiple text parts as joined content", () => {
@@ -212,7 +225,7 @@ describe("MessageBubble", () => {
     };
 
     const { container } = render(
-      <MessageBubble message={message} className="custom-class" />
+      <MessageBubble message={message} className="custom-class" />,
     );
 
     expect(container.firstChild).toHaveClass("custom-class");

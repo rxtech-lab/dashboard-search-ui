@@ -37,7 +37,13 @@ export interface SearchTriggerProps
   className?: string;
 
   /** Variant for styling (uses shadcn Button variants) */
-  variant?: "default" | "outline" | "ghost" | "secondary" | "destructive" | "link";
+  variant?:
+    | "default"
+    | "outline"
+    | "ghost"
+    | "secondary"
+    | "destructive"
+    | "link";
 }
 
 /**
@@ -83,7 +89,10 @@ export function SearchTrigger({
       <Button
         variant={variant}
         onClick={onClick}
-        className={cn("w-full max-w-md justify-start text-muted-foreground", className)}
+        className={cn(
+          "w-full max-w-md justify-start text-muted-foreground",
+          className,
+        )}
         {...buttonProps}
       >
         {children}
@@ -95,14 +104,19 @@ export function SearchTrigger({
     <Button
       variant={variant}
       onClick={onClick}
-      className={cn("w-full max-w-md justify-start text-muted-foreground", className)}
+      className={cn(
+        "w-full max-w-md justify-start text-muted-foreground",
+        className,
+      )}
       {...buttonProps}
     >
       <Icon className="h-4 w-4 mr-2" />
       <span className="flex-1 text-left">{placeholder}</span>
       {shortcut && (
         <kbd className="pointer-events-none hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
-          {shortcut.modifier && <span className="text-xs">{shortcut.modifier}</span>}
+          {shortcut.modifier && (
+            <span className="text-xs">{shortcut.modifier}</span>
+          )}
           {shortcut.key}
         </kbd>
       )}

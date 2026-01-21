@@ -53,7 +53,9 @@ function SearchFilesRenderer({ output, onAction }: ToolResultRendererProps) {
           <div
             key={result.id}
             className="group flex cursor-pointer items-start gap-3 rounded-md border bg-card p-3 transition-colors hover:bg-accent"
-            onClick={() => onAction?.({ type: "navigate", payload: `/files/${result.id}` })}
+            onClick={() =>
+              onAction?.({ type: "navigate", payload: `/files/${result.id}` })
+            }
           >
             <FileText className="mt-0.5 h-4 w-4 shrink-0 text-muted-foreground" />
             <div className="min-w-0 flex-1">
@@ -97,7 +99,9 @@ function DisplayResultsRenderer({ output, onAction }: ToolResultRendererProps) {
           <FileResultCard
             key={file.id}
             file={file}
-            onClick={() => onAction?.({ type: "navigate", payload: `/files/${file.id}` })}
+            onClick={() =>
+              onAction?.({ type: "navigate", payload: `/files/${file.id}` })
+            }
             renderIcon={(fileType) => {
               return <FileText className="h-4 w-4 text-blue-500" />;
             }}

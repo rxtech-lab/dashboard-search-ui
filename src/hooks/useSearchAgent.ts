@@ -85,7 +85,7 @@ export interface UseSearchAgentReturn {
 
   /** Set messages directly */
   setMessages: (
-    messages: UIMessage[] | ((messages: UIMessage[]) => UIMessage[])
+    messages: UIMessage[] | ((messages: UIMessage[]) => UIMessage[]),
   ) => void;
 
   /** The underlying Chat instance */
@@ -112,7 +112,7 @@ export interface UseSearchAgentReturn {
  * Extracts common chat logic and provides utilities for working with messages.
  */
 export function useSearchAgent(
-  options: UseSearchAgentOptions = {}
+  options: UseSearchAgentOptions = {},
 ): UseSearchAgentReturn {
   const {
     apiEndpoint = "/api/search-agent",
@@ -138,7 +138,11 @@ export function useSearchAgent(
     };
 
     if (onToolCall) {
-      chatOptions.onToolCall = ({ toolCall }: { toolCall: { toolName: string; args?: unknown } }) => {
+      chatOptions.onToolCall = ({
+        toolCall,
+      }: {
+        toolCall: { toolName: string; args?: unknown };
+      }) => {
         onToolCall({
           toolName: toolCall.toolName,
           args: toolCall.args,
@@ -162,8 +166,13 @@ export function useSearchAgent(
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [providedChat, apiEndpoint]); // Recreate if providedChat or apiEndpoint changes
 
-  const { messages, sendMessage: baseSendMessage, status, error, setMessages } =
-    useChat({ chat });
+  const {
+    messages,
+    sendMessage: baseSendMessage,
+    status,
+    error,
+    setMessages,
+  } = useChat({ chat });
 
   const isProcessing = status === "streaming" || status === "submitted";
 
@@ -192,7 +201,7 @@ export function useSearchAgent(
     (text: string) => {
       baseSendMessage({ text });
     },
-    [baseSendMessage]
+    [baseSendMessage],
   );
 
   // Stop generation
@@ -208,7 +217,9 @@ export function useSearchAgent(
   // Extract text content from a message
   const getTextContent = useCallback((message: UIMessage): string => {
     return message.parts
-      .filter((part): part is { type: "text"; text: string } => part.type === "text")
+      .filter(
+        (part): part is { type: "text"; text: string } => part.type === "text",
+      )
       .map((part) => part.text)
       .join("");
   }, []);
@@ -235,7 +246,7 @@ export function useSearchAgent(
       const toolCalls = getToolCalls(message);
       return textContent.trim().length > 0 || toolCalls.length > 0;
     },
-    [getTextContent, getToolCalls]
+    [getTextContent, getToolCalls],
   );
 
   // Delete a message and all messages after it (for edit/retry flow)
@@ -247,7 +258,7 @@ export function useSearchAgent(
         return prev.slice(0, idx);
       });
     },
-    [setMessages]
+    [setMessages],
   );
 
   // Get message content by ID for editing
@@ -256,7 +267,7 @@ export function useSearchAgent(
       const message = messages.find((m) => m.id === messageId);
       return message ? getTextContent(message) : undefined;
     },
-    [messages, getTextContent]
+    [messages, getTextContent],
   );
 
   return {

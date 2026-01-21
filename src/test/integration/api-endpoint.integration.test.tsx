@@ -56,7 +56,7 @@ describe("SearchAgent API Endpoint Integration", () => {
         } catch {
           done(null, body);
         }
-      }
+      },
     );
 
     // Wildcard route to capture all POST requests
@@ -102,7 +102,7 @@ describe("SearchAgent API Endpoint Integration", () => {
       () => {
         expect(receivedRequests.length).toBeGreaterThan(0);
       },
-      { timeout: 5000 }
+      { timeout: 5000 },
     );
 
     expect(receivedRequests[0].url).toBe("/my/custom/endpoint");
@@ -112,9 +112,7 @@ describe("SearchAgent API Endpoint Integration", () => {
     const user = userEvent.setup();
 
     const { unmount } = render(
-      <SearchAgent
-        apiEndpoint={`http://127.0.0.1:${serverPort}/endpoint-a`}
-      />
+      <SearchAgent apiEndpoint={`http://127.0.0.1:${serverPort}/endpoint-a`} />,
     );
 
     const input1 = screen.getByRole("textbox");
@@ -124,10 +122,10 @@ describe("SearchAgent API Endpoint Integration", () => {
     await waitFor(
       () => {
         expect(receivedRequests.some((r) => r.url === "/endpoint-a")).toBe(
-          true
+          true,
         );
       },
-      { timeout: 5000 }
+      { timeout: 5000 },
     );
 
     unmount();
@@ -135,9 +133,7 @@ describe("SearchAgent API Endpoint Integration", () => {
 
     const user2 = userEvent.setup();
     render(
-      <SearchAgent
-        apiEndpoint={`http://127.0.0.1:${serverPort}/endpoint-b`}
-      />
+      <SearchAgent apiEndpoint={`http://127.0.0.1:${serverPort}/endpoint-b`} />,
     );
 
     const input2 = screen.getByRole("textbox");
@@ -147,10 +143,10 @@ describe("SearchAgent API Endpoint Integration", () => {
     await waitFor(
       () => {
         expect(receivedRequests.some((r) => r.url === "/endpoint-b")).toBe(
-          true
+          true,
         );
       },
-      { timeout: 5000 }
+      { timeout: 5000 },
     );
   });
 
@@ -158,9 +154,7 @@ describe("SearchAgent API Endpoint Integration", () => {
     const user = userEvent.setup();
     const testMessage = "Find documents about TypeScript";
 
-    render(
-      <SearchAgent apiEndpoint={`http://127.0.0.1:${serverPort}/chat`} />
-    );
+    render(<SearchAgent apiEndpoint={`http://127.0.0.1:${serverPort}/chat`} />);
 
     const input = screen.getByRole("textbox");
     await user.type(input, testMessage);
@@ -170,7 +164,7 @@ describe("SearchAgent API Endpoint Integration", () => {
       () => {
         expect(receivedRequests.length).toBeGreaterThan(0);
       },
-      { timeout: 5000 }
+      { timeout: 5000 },
     );
 
     const requestBody = JSON.stringify(receivedRequests[0].body);

@@ -1,1 +1,5 @@
-export { SearchTrigger, type SearchTriggerProps, type ShortcutConfig } from "./SearchTrigger";
+export {
+  SearchTrigger,
+  type SearchTriggerProps,
+  type ShortcutConfig,
+} from "./SearchTrigger";

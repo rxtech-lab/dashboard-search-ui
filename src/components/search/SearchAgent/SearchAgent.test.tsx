@@ -17,7 +17,10 @@ vi.mock("@ai-sdk/react", () => ({
     error: undefined,
     setMessages: mockSetMessages,
   })),
-  Chat: vi.fn().mockImplementation(function (this: Record<string, unknown>, config: Record<string, unknown>) {
+  Chat: vi.fn().mockImplementation(function (
+    this: Record<string, unknown>,
+    config: Record<string, unknown>,
+  ) {
     Object.assign(this, config);
     this.stop = mockStop;
   }),
@@ -27,7 +30,10 @@ vi.mock("@ai-sdk/react", () => ({
 vi.mock("@radix-ui/react-tooltip", () => ({
   Provider: ({ children }: React.PropsWithChildren) => <>{children}</>,
   Root: ({ children }: React.PropsWithChildren) => <>{children}</>,
-  Trigger: ({ children, asChild }: React.PropsWithChildren<{ asChild?: boolean }>) => {
+  Trigger: ({
+    children,
+    asChild,
+  }: React.PropsWithChildren<{ asChild?: boolean }>) => {
     if (asChild && React.isValidElement(children)) {
       return children;
     }
@@ -134,13 +140,12 @@ describe("SearchAgent", () => {
       });
 
       render(
-        <SearchAgent
-          onBack={() => {}}
-          header={{ showBackButton: false }}
-        />
+        <SearchAgent onBack={() => {}} header={{ showBackButton: false }} />,
       );
 
-      expect(screen.queryByRole("button", { name: /back/i })).not.toBeInTheDocument();
+      expect(
+        screen.queryByRole("button", { name: /back/i }),
+      ).not.toBeInTheDocument();
     });
   });
 
@@ -166,7 +171,11 @@ describe("SearchAgent", () => {
       const { useChat } = await import("@ai-sdk/react");
       (useChat as ReturnType<typeof vi.fn>).mockReturnValue({
         messages: [
-          { id: "1", role: "assistant", parts: [{ type: "text", text: "Hi there!" }] },
+          {
+            id: "1",
+            role: "assistant",
+            parts: [{ type: "text", text: "Hi there!" }],
+          },
         ],
         sendMessage: mockSendMessage,
         status: "ready",
@@ -261,7 +270,13 @@ describe("SearchAgent", () => {
     it("renders action buttons by default", async () => {
       const { useChat } = await import("@ai-sdk/react");
       (useChat as ReturnType<typeof vi.fn>).mockReturnValue({
-        messages: [{ id: "1", role: "user", parts: [{ type: "text", text: "test message" }] }],
+        messages: [
+          {
+            id: "1",
+            role: "user",
+            parts: [{ type: "text", text: "test message" }],
+          },
+        ],
         sendMessage: mockSendMessage,
         status: "ready",
         stop: mockStop,
@@ -279,7 +294,13 @@ describe("SearchAgent", () => {
     it("does not render action buttons when enableMessageActions is false", async () => {
       const { useChat } = await import("@ai-sdk/react");
       (useChat as ReturnType<typeof vi.fn>).mockReturnValue({
-        messages: [{ id: "1", role: "user", parts: [{ type: "text", text: "test message" }] }],
+        messages: [
+          {
+            id: "1",
+            role: "user",
+            parts: [{ type: "text", text: "test message" }],
+          },
+        ],
         sendMessage: mockSendMessage,
         status: "ready",
         stop: mockStop,
@@ -297,8 +318,16 @@ describe("SearchAgent", () => {
       const { useChat } = await import("@ai-sdk/react");
       (useChat as ReturnType<typeof vi.fn>).mockReturnValue({
         messages: [
-          { id: "1", role: "user", parts: [{ type: "text", text: "original query" }] },
-          { id: "2", role: "assistant", parts: [{ type: "text", text: "response" }] },
+          {
+            id: "1",
+            role: "user",
+            parts: [{ type: "text", text: "original query" }],
+          },
+          {
+            id: "2",
+            role: "assistant",
+            parts: [{ type: "text", text: "response" }],
+          },
         ],
         sendMessage: mockSendMessage,
         status: "ready",
@@ -328,8 +357,16 @@ describe("SearchAgent", () => {
       const { useChat } = await import("@ai-sdk/react");
       (useChat as ReturnType<typeof vi.fn>).mockReturnValue({
         messages: [
-          { id: "1", role: "user", parts: [{ type: "text", text: "user query" }] },
-          { id: "2", role: "assistant", parts: [{ type: "text", text: "assistant response" }] },
+          {
+            id: "1",
+            role: "user",
+            parts: [{ type: "text", text: "user query" }],
+          },
+          {
+            id: "2",
+            role: "assistant",
+            parts: [{ type: "text", text: "assistant response" }],
+          },
         ],
         sendMessage: mockSendMessage,
         status: "ready",
@@ -359,10 +396,26 @@ describe("SearchAgent", () => {
       const { useChat } = await import("@ai-sdk/react");
       (useChat as ReturnType<typeof vi.fn>).mockReturnValue({
         messages: [
-          { id: "1", role: "user", parts: [{ type: "text", text: "first query" }] },
-          { id: "2", role: "assistant", parts: [{ type: "text", text: "first response" }] },
-          { id: "3", role: "user", parts: [{ type: "text", text: "follow-up query" }] },
-          { id: "4", role: "assistant", parts: [{ type: "text", text: "follow-up response" }] },
+          {
+            id: "1",
+            role: "user",
+            parts: [{ type: "text", text: "first query" }],
+          },
+          {
+            id: "2",
+            role: "assistant",
+            parts: [{ type: "text", text: "first response" }],
+          },
+          {
+            id: "3",
+            role: "user",
+            parts: [{ type: "text", text: "follow-up query" }],
+          },
+          {
+            id: "4",
+            role: "assistant",
+            parts: [{ type: "text", text: "follow-up response" }],
+          },
         ],
         sendMessage: mockSendMessage,
         status: "ready",
@@ -383,10 +436,26 @@ describe("SearchAgent", () => {
       // Verify setMessages keeps first 2 messages
       const setMessagesCall = mockSetMessages.mock.calls[0][0];
       const testMessages = [
-        { id: "1", role: "user", parts: [{ type: "text", text: "first query" }] },
-        { id: "2", role: "assistant", parts: [{ type: "text", text: "first response" }] },
-        { id: "3", role: "user", parts: [{ type: "text", text: "follow-up query" }] },
-        { id: "4", role: "assistant", parts: [{ type: "text", text: "follow-up response" }] },
+        {
+          id: "1",
+          role: "user",
+          parts: [{ type: "text", text: "first query" }],
+        },
+        {
+          id: "2",
+          role: "assistant",
+          parts: [{ type: "text", text: "first response" }],
+        },
+        {
+          id: "3",
+          role: "user",
+          parts: [{ type: "text", text: "follow-up query" }],
+        },
+        {
+          id: "4",
+          role: "assistant",
+          parts: [{ type: "text", text: "follow-up response" }],
+        },
       ];
       const result = setMessagesCall(testMessages);
       expect(result).toHaveLength(2);
@@ -401,7 +470,11 @@ describe("SearchAgent", () => {
       const { useChat } = await import("@ai-sdk/react");
       (useChat as ReturnType<typeof vi.fn>).mockReturnValue({
         messages: [
-          { id: "1", role: "user", parts: [{ type: "text", text: "user query" }] },
+          {
+            id: "1",
+            role: "user",
+            parts: [{ type: "text", text: "user query" }],
+          },
         ],
         sendMessage: mockSendMessage,
         status: "streaming",

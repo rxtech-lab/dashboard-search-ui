@@ -19,7 +19,9 @@ describe("SearchTrigger", () => {
   });
 
   it("renders custom placeholder", () => {
-    render(<SearchTrigger onClick={() => {}} placeholder="Find documents..." />);
+    render(
+      <SearchTrigger onClick={() => {}} placeholder="Find documents..." />,
+    );
 
     expect(screen.getByText("Find documents...")).toBeInTheDocument();
   });
@@ -28,7 +30,7 @@ describe("SearchTrigger", () => {
     render(
       <SearchTrigger onClick={() => {}}>
         <span>Custom Trigger</span>
-      </SearchTrigger>
+      </SearchTrigger>,
     );
 
     expect(screen.getByText("Custom Trigger")).toBeInTheDocument();
@@ -37,7 +39,10 @@ describe("SearchTrigger", () => {
 
   it("renders custom shortcut", () => {
     render(
-      <SearchTrigger onClick={() => {}} shortcut={{ key: "P", modifier: "Ctrl" }} />
+      <SearchTrigger
+        onClick={() => {}}
+        shortcut={{ key: "P", modifier: "Ctrl" }}
+      />,
     );
 
     expect(screen.getByText("Ctrl")).toBeInTheDocument();
@@ -77,7 +82,13 @@ describe("SearchTrigger", () => {
   });
 
   it("passes through additional button props", () => {
-    render(<SearchTrigger onClick={() => {}} disabled data-testid="search-trigger" />);
+    render(
+      <SearchTrigger
+        onClick={() => {}}
+        disabled
+        data-testid="search-trigger"
+      />,
+    );
 
     const button = screen.getByTestId("search-trigger");
     expect(button).toBeDisabled();

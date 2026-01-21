@@ -16,7 +16,10 @@ vi.mock("@ai-sdk/react", () => ({
     error: undefined,
     setMessages: mockSetMessages,
   })),
-  Chat: vi.fn().mockImplementation(function (this: Record<string, unknown>, config: Record<string, unknown>) {
+  Chat: vi.fn().mockImplementation(function (
+    this: Record<string, unknown>,
+    config: Record<string, unknown>,
+  ) {
     Object.assign(this, config);
     this.stop = mockStop;
   }),
