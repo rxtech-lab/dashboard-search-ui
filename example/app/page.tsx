@@ -121,6 +121,46 @@ export default function Dashboard() {
             />
           </section>
 
+          {/* Style Isolation Test */}
+          <section
+            className="rounded-lg border p-6"
+            style={
+              {
+                // These use custom CSS vars that would be overridden if library styles leak
+                "--test-bg": "#fef2f2",
+                "--test-fg": "#991b1b",
+                "--test-border": "#fca5a5",
+                background: "var(--test-bg)",
+                color: "var(--test-fg)",
+                borderColor: "var(--test-border)",
+              } as React.CSSProperties
+            }
+          >
+            <h3 className="mb-4 text-lg font-semibold">
+              🧪 Style Isolation Test
+            </h3>
+            <p className="mb-2">
+              This section uses <strong>custom CSS variables</strong> with a red
+              theme.
+            </p>
+            <p className="text-sm opacity-80">
+              If you see this box with a <strong>light red background</strong>{" "}
+              and <strong>dark red text</strong>, then the library&apos;s styles
+              are properly isolated and not leaking into your app.
+            </p>
+            <div className="mt-4 flex gap-2">
+              <span
+                className="rounded px-2 py-1 text-xs"
+                style={{ background: "#fee2e2", border: "1px solid #fca5a5" }}
+              >
+                Custom styled element
+              </span>
+              <span className="rounded bg-muted px-2 py-1 text-xs text-muted-foreground">
+                Tailwind styled element
+              </span>
+            </div>
+          </section>
+
           {/* Instructions */}
           <section className="rounded-lg border bg-card p-6">
             <h3 className="mb-4 text-lg font-semibold">Try it out</h3>
