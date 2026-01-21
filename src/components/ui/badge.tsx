@@ -5,18 +5,18 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const badgeVariants = cva(
-  "inline-flex items-center justify-center rounded-full border px-2 py-0.5 text-xs font-medium w-fit whitespace-nowrap shrink-0 [&>svg]:size-3 gap-1 [&>svg]:pointer-events-none focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive transition-[color,box-shadow] overflow-hidden",
+  "sui:inline-flex sui:items-center sui:justify-center sui:rounded-full sui:border sui:px-2 sui:py-0.5 sui:text-xs sui:font-medium sui:w-fit sui:whitespace-nowrap sui:shrink-0 [&>svg]:sui:size-3 sui:gap-1 [&>svg]:sui:pointer-events-none focus-visible:sui:border-ring focus-visible:sui:ring-ring/50 focus-visible:sui:ring-[3px] aria-invalid:sui:ring-destructive/20 sui:dark:aria-invalid:sui:ring-destructive/40 aria-invalid:sui:border-destructive sui:transition-[color,box-shadow] sui:overflow-hidden",
   {
     variants: {
       variant: {
         default:
-          "border-transparent bg-primary text-primary-foreground [a&]:hover:bg-primary/90",
+          "sui:border-transparent sui:bg-primary sui:text-primary-foreground [a&]:hover:sui:bg-primary/90",
         secondary:
-          "border-transparent bg-secondary text-secondary-foreground [a&]:hover:bg-secondary/90",
+          "sui:border-transparent sui:bg-secondary sui:text-secondary-foreground [a&]:hover:sui:bg-secondary/90",
         destructive:
-          "border-transparent bg-destructive text-white [a&]:hover:bg-destructive/90 focus-visible:ring-destructive/20 dark:focus-visible:ring-destructive/40 dark:bg-destructive/60",
+          "sui:border-transparent sui:bg-destructive sui:text-white [a&]:hover:sui:bg-destructive/90 focus-visible:sui:ring-destructive/20 sui:dark:focus-visible:sui:ring-destructive/40 sui:dark:sui:bg-destructive/60",
         outline:
-          "text-foreground [a&]:hover:bg-accent [a&]:hover:text-accent-foreground",
+          "sui:text-foreground [a&]:hover:sui:bg-accent [a&]:hover:sui:text-accent-foreground",
       },
     },
     defaultVariants: {

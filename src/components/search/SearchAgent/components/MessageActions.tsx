@@ -72,8 +72,8 @@ export function MessageActions({
     <TooltipProvider delayDuration={300}>
       <div
         className={cn(
-          "flex items-center gap-0.5 mt-1",
-          isUser ? "justify-end" : "justify-start pl-10",
+          "sui:flex sui:items-center sui:gap-0.5 sui:mt-1",
+          isUser ? "sui:justify-end" : "sui:justify-start sui:pl-10",
           className,
         )}
       >
@@ -83,14 +83,14 @@ export function MessageActions({
             <Button
               variant="ghost"
               size="icon"
-              className="h-7 w-7 text-muted-foreground hover:text-foreground"
+              className="sui:h-7 sui:w-7 sui:text-muted-foreground hover:sui:text-foreground"
               onClick={handleCopy}
               data-testid="action-copy"
             >
               {copied ? (
-                <Check className="h-3.5 w-3.5" />
+                <Check className="sui:h-3.5 sui:w-3.5" />
               ) : (
-                <Copy className="h-3.5 w-3.5" />
+                <Copy className="sui:h-3.5 sui:w-3.5" />
               )}
             </Button>
           </TooltipTrigger>
@@ -105,12 +105,12 @@ export function MessageActions({
             <Button
               variant="ghost"
               size="icon"
-              className="h-7 w-7 text-muted-foreground hover:text-foreground"
+              className="sui:h-7 sui:w-7 sui:text-muted-foreground hover:sui:text-foreground"
               onClick={handleRegenerate}
               disabled={isProcessing}
               data-testid="action-regenerate"
             >
-              <RotateCcw className="h-3.5 w-3.5" />
+              <RotateCcw className="sui:h-3.5 sui:w-3.5" />
             </Button>
           </TooltipTrigger>
           <TooltipContent side="bottom">

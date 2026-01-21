@@ -97,24 +97,34 @@ export function MessageBubble({
     });
 
   return (
-    <div className={cn("flex gap-3", isUser && "flex-row-reverse", className)}>
+    <div
+      className={cn(
+        "sui:flex sui:gap-3",
+        isUser && "sui:flex-row-reverse",
+        className,
+      )}
+    >
       <div
         className={cn(
-          "flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center",
-          isUser ? "bg-primary text-primary-foreground" : "bg-muted",
+          "sui:flex-shrink-0 sui:w-8 sui:h-8 sui:rounded-full sui:flex sui:items-center sui:justify-center",
+          isUser
+            ? "sui:bg-primary sui:text-primary-foreground"
+            : "sui:bg-muted",
         )}
       >
         {isUser ? (
-          <UserIcon className="h-4 w-4" />
+          <UserIcon className="sui:h-4 sui:w-4" />
         ) : (
-          <BotIcon className="h-4 w-4" />
+          <BotIcon className="sui:h-4 sui:w-4" />
         )}
       </div>
 
-      <div className={cn("flex-1 space-y-3", isUser && "text-right")}>
+      <div
+        className={cn("sui:flex-1 sui:space-y-3", isUser && "sui:text-right")}
+      >
         {/* Tool calls indicator */}
         {!isUser && toolCalls.length > 0 && (
-          <div className="space-y-2">
+          <div className="sui:space-y-2">
             {toolCalls.map((tool, idx) => {
               // Extract tool name from type (e.g., "tool-search_files" -> "search_files")
               const toolName = tool.type.replace("tool-", "");
@@ -143,14 +153,14 @@ export function MessageBubble({
                   key={`${tool.toolCallId || idx}-${idx}`}
                   initial={{ scale: 0.95, opacity: 0 }}
                   animate={{ scale: 1, opacity: 1 }}
-                  className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-muted/50 text-xs w-fit"
+                  className="sui:flex sui:items-center sui:gap-2 sui:px-3 sui:py-1.5 sui:rounded-lg sui:bg-muted/50 sui:text-xs sui:w-fit"
                 >
                   {tool.state === "output-available" ? (
-                    <span className="text-green-500">✓</span>
+                    <span className="sui:text-green-500">✓</span>
                   ) : (
-                    <Loader2 className="h-3 w-3 animate-spin text-primary" />
+                    <Loader2 className="sui:h-3 sui:w-3 sui:animate-spin sui:text-primary" />
                   )}
-                  <span className="text-muted-foreground">
+                  <span className="sui:text-muted-foreground">
                     {formatToolName(toolName)}
                   </span>
                 </motion.div>
@@ -163,22 +173,22 @@ export function MessageBubble({
         {textContent && (
           <div
             className={cn(
-              "inline-block px-4 py-2 rounded-2xl text-sm max-w-[85%]",
+              "sui:inline-block sui:px-4 sui:py-2 sui:rounded-2xl sui:text-sm sui:max-w-[85%]",
               isUser
-                ? "bg-primary text-primary-foreground rounded-tr-md"
-                : "bg-muted rounded-tl-md text-left",
+                ? "sui:bg-primary sui:text-primary-foreground sui:rounded-tr-md"
+                : "sui:bg-muted sui:rounded-tl-md sui:text-left",
             )}
           >
             {isUser ? (
               renderUserContent ? (
                 renderUserContent(textContent)
               ) : (
-                <div className="whitespace-pre-wrap">{textContent}</div>
+                <div className="sui:whitespace-pre-wrap">{textContent}</div>
               )
             ) : renderAssistantContent ? (
               renderAssistantContent(textContent)
             ) : (
-              <div className="prose prose-sm dark:prose-invert max-w-none break-words prose-p:my-1 prose-ul:my-1 prose-ol:my-1 prose-li:my-0.5">
+              <div className="sui:prose sui:prose-sm sui:dark:prose-invert sui:max-w-none sui:break-words prose-p:sui:my-1 prose-ul:sui:my-1 prose-ol:sui:my-1 prose-li:sui:my-0.5">
                 <Markdown>{textContent}</Markdown>
               </div>
             )}

@@ -295,19 +295,19 @@ export function SearchCommand<
       key={result.id}
       value={String(result.id)}
       onSelect={onSelect}
-      className="cursor-pointer"
+      className="sui:cursor-pointer"
     >
-      <div className="flex items-start gap-3 w-full">
-        <div className="flex-1 min-w-0">
-          <p className="font-medium truncate">{result.title}</p>
+      <div className="sui:flex sui:items-start sui:gap-3 sui:w-full">
+        <div className="sui:flex-1 sui:min-w-0">
+          <p className="sui:font-medium sui:truncate">{result.title}</p>
           {result.snippet && (
-            <p className="text-xs text-muted-foreground truncate">
+            <p className="sui:text-xs sui:text-muted-foreground sui:truncate">
               {result.snippet}
             </p>
           )}
         </div>
         {result.score !== undefined && result.score > 0 && (
-          <Badge variant="secondary" className="text-xs">
+          <Badge variant="secondary" className="sui:text-xs">
             {(result.score * 100).toFixed(0)}%
           </Badge>
         )}
@@ -319,25 +319,25 @@ export function SearchCommand<
   const defaultRenderEmpty = (currentQuery: string) => (
     <CommandEmpty data-testid="search-empty-state">
       {currentQuery ? (
-        <div className="space-y-2 py-4">
+        <div className="sui:space-y-2 sui:py-4">
           <p data-testid="search-no-results">No results found.</p>
           {enableAgentMode && (
             <button
               onClick={handleEnterPress}
-              className="inline-flex items-center gap-2 text-sm text-primary hover:underline"
+              className="sui:inline-flex sui:items-center sui:gap-2 sui:text-sm sui:text-primary hover:sui:underline"
             >
-              <Sparkles className="h-4 w-4" />
+              <Sparkles className="sui:h-4 sui:w-4" />
               Try AI search
             </button>
           )}
         </div>
       ) : (
-        <div className="space-y-2 py-4">
+        <div className="sui:space-y-2 sui:py-4">
           <p data-testid="search-type-prompt">Type to search...</p>
           {enableAgentMode && (
-            <p className="text-xs text-muted-foreground">
+            <p className="sui:text-xs sui:text-muted-foreground">
               Press{" "}
-              <kbd className="px-1.5 py-0.5 bg-muted rounded text-[10px]">
+              <kbd className="sui:px-1.5 sui:py-0.5 sui:bg-muted sui:rounded sui:text-[10px]">
                 Enter
               </kbd>{" "}
               for AI-powered search
@@ -350,8 +350,8 @@ export function SearchCommand<
 
   // Default loading renderer
   const defaultRenderLoading = () => (
-    <div className="flex items-center justify-center py-6">
-      <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+    <div className="sui:flex sui:items-center sui:justify-center sui:py-6">
+      <Loader2 className="sui:h-6 sui:w-6 sui:animate-spin sui:text-muted-foreground" />
     </div>
   );
 
@@ -359,7 +359,7 @@ export function SearchCommand<
     <CommandDialog
       open={open}
       onOpenChange={onOpenChange}
-      className={cn("max-w-2xl! overflow-hidden ", className)}
+      className={cn("sui:max-w-2xl! sui:overflow-hidden ", className)}
       shouldFilter={false}
       showCloseButton
     >
@@ -371,7 +371,7 @@ export function SearchCommand<
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: -30, scale: 0.98 }}
             transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
-            className="flex flex-col"
+            className="sui:flex sui:flex-col"
           >
             <CommandInput
               ref={inputRef}
@@ -411,21 +411,21 @@ export function SearchCommand<
             </CommandList>
 
             {/* Footer */}
-            <div className="border-t p-2 flex items-center justify-between">
+            <div className="sui:border-t sui:p-2 sui:flex sui:items-center sui:justify-between">
               {/* Search type selector */}
               {showSearchTypeSelector &&
                 searchTypes &&
                 searchTypes.length > 0 && (
-                  <div className="flex items-center gap-2">
+                  <div className="sui:flex sui:items-center sui:gap-2">
                     {searchTypes.map((type) => (
                       <button
                         key={type.id}
                         onClick={() => setSearchType(type.id)}
                         className={cn(
-                          "px-2 py-1 text-xs rounded-md transition-colors",
+                          "sui:px-2 sui:py-1 sui:text-xs sui:rounded-md sui:transition-colors",
                           searchType === type.id
-                            ? "bg-primary text-primary-foreground"
-                            : "bg-muted text-muted-foreground hover:bg-muted/80",
+                            ? "sui:bg-primary sui:text-primary-foreground"
+                            : "sui:bg-muted sui:text-muted-foreground hover:sui:bg-muted/80",
                         )}
                       >
                         {type.label}
@@ -435,20 +435,20 @@ export function SearchCommand<
                 )}
 
               {/* Right side hints */}
-              <div className="flex items-center gap-3 text-xs text-muted-foreground ml-auto">
+              <div className="sui:flex sui:items-center sui:gap-3 sui:text-xs sui:text-muted-foreground sui:ml-auto">
                 {enableAgentMode && hasChatHistory && (
                   <button
                     onClick={handleResumeChat}
-                    className="flex items-center gap-1 text-primary hover:underline font-medium"
+                    className="sui:flex sui:items-center sui:gap-1 sui:text-primary hover:sui:underline sui:font-medium"
                   >
-                    <MessageSquare className="h-3 w-3" />
+                    <MessageSquare className="sui:h-3 sui:w-3" />
                     Resume Chat
                   </button>
                 )}
                 {enableAgentMode && (
-                  <span className="flex items-center gap-1">
-                    <Sparkles className="h-3 w-3" />
-                    <kbd className="px-1.5 py-0.5 bg-muted rounded text-[10px]">
+                  <span className="sui:flex sui:items-center sui:gap-1">
+                    <Sparkles className="sui:h-3 sui:w-3" />
+                    <kbd className="sui:px-1.5 sui:py-0.5 sui:bg-muted sui:rounded sui:text-[10px]">
                       Enter
                     </kbd>
                     AI
@@ -465,7 +465,7 @@ export function SearchCommand<
             animate={{ opacity: 1, x: 0, scale: 1 }}
             exit={{ opacity: 0, x: 30, scale: 0.98 }}
             transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
-            className="h-[min(600px,80vh)]"
+            className="sui:h-[min(600px,80vh)]"
           >
             <SearchAgent
               initialQuery={agentQuery}

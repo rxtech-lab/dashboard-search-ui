@@ -45,13 +45,13 @@ function TooltipContent({
         data-sui
         sideOffset={sideOffset}
         className={cn(
-          "bg-foreground text-background animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95 data-[side=bottom]:slide-in-from-top-2 data-[side=left]:slide-in-from-right-2 data-[side=right]:slide-in-from-left-2 data-[side=top]:slide-in-from-bottom-2 z-50 w-fit origin-(--radix-tooltip-content-transform-origin) rounded-md px-3 py-1.5 text-xs text-balance",
+          "sui:bg-foreground sui:text-background sui:animate-in sui:fade-in-0 sui:zoom-in-95 data-[state=closed]:sui:animate-out data-[state=closed]:sui:fade-out-0 data-[state=closed]:sui:zoom-out-95 data-[side=bottom]:sui:slide-in-from-top-2 data-[side=left]:sui:slide-in-from-right-2 data-[side=right]:sui:slide-in-from-left-2 data-[side=top]:sui:slide-in-from-bottom-2 sui:z-50 sui:w-fit sui:origin-(--radix-tooltip-content-transform-origin) sui:rounded-md sui:px-3 sui:py-1.5 sui:text-xs sui:text-balance",
           className,
         )}
         {...props}
       >
         {children}
-        <TooltipPrimitive.Arrow className="bg-foreground fill-foreground z-50 size-2.5 translate-y-[calc(-50%_-_2px)] rotate-45 rounded-[2px]" />
+        <TooltipPrimitive.Arrow className="sui:bg-foreground sui:fill-foreground sui:z-50 sui:size-2.5 sui:translate-y-[calc(-50%_-_2px)] sui:rotate-45 sui:rounded-[2px]" />
       </TooltipPrimitive.Content>
     </TooltipPrimitive.Portal>
   );

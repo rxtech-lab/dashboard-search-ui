@@ -90,7 +90,7 @@ export function SearchTrigger({
         variant={variant}
         onClick={onClick}
         className={cn(
-          "w-full max-w-md justify-start text-muted-foreground",
+          "sui:w-full sui:max-w-md sui:justify-start sui:text-muted-foreground",
           className,
         )}
         {...buttonProps}
@@ -105,17 +105,17 @@ export function SearchTrigger({
       variant={variant}
       onClick={onClick}
       className={cn(
-        "w-full max-w-md justify-start text-muted-foreground",
+        "sui:w-full sui:max-w-md sui:justify-start sui:text-muted-foreground",
         className,
       )}
       {...buttonProps}
     >
-      <Icon className="h-4 w-4 mr-2" />
-      <span className="flex-1 text-left">{placeholder}</span>
+      <Icon className="sui:h-4 sui:w-4 sui:mr-2" />
+      <span className="sui:flex-1 sui:text-left">{placeholder}</span>
       {shortcut && (
-        <kbd className="pointer-events-none hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium opacity-100 sm:flex">
+        <kbd className="sui:pointer-events-none sui:hidden sui:h-5 sui:select-none sui:items-center sui:gap-1 sui:rounded sui:border sui:bg-muted sui:px-1.5 sui:font-mono sui:text-[10px] sui:font-medium sui:opacity-100 sm:sui:flex">
           {shortcut.modifier && (
-            <span className="text-xs">{shortcut.modifier}</span>
+            <span className="sui:text-xs">{shortcut.modifier}</span>
           )}
           {shortcut.key}
         </kbd>

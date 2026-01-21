@@ -1,42 +1,8 @@
-/* Import Tailwind - preflight needed for utilities to work correctly */
-@import "tailwindcss/preflight" layer(base);
-@import "tailwindcss/theme" layer(theme);
-@import "tailwindcss/utilities" layer(utilities);
+/* Import only Tailwind utilities with prefix - no preflight to avoid global style pollution */
+@import "tailwindcss/theme" prefix(sui);
+@import "tailwindcss/utilities" prefix(sui);
 
-/* Scope preflight-like resets and variables to library components */
-[data-sui] {
-  /* Box sizing reset */
-  *,
-  *::before,
-  *::after {
-    box-sizing: border-box;
-    border-width: 0;
-    border-style: solid;
-    border-color: var(--border, currentColor);
-  }
-
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --destructive-foreground: oklch(0.577 0.245 27.325);
-  --ring: oklch(0.708 0 0);
-  --radius: 0.625rem;
-}
-
+/* Tell Tailwind about our custom theme colors - maps utility names to CSS variables */
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
@@ -58,4 +24,36 @@
   --color-destructive-foreground: var(--destructive-foreground);
   --color-ring: var(--ring);
   --radius: var(--radius);
+}
+
+/* Scope all base styles and CSS variable values to library components only */
+[data-sui] {
+  /* Box sizing reset - scoped to library components */
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  /* CSS variable values for the library's theme - scoped to prevent leaking */
+  --background: oklch(1 0 0);
+  --foreground: oklch(0.145 0 0);
+  --muted: oklch(0.97 0 0);
+  --muted-foreground: oklch(0.556 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.145 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.145 0 0);
+  --border: oklch(0.922 0 0);
+  --input: oklch(0.922 0 0);
+  --primary: oklch(0.205 0 0);
+  --primary-foreground: oklch(0.985 0 0);
+  --secondary: oklch(0.97 0 0);
+  --secondary-foreground: oklch(0.205 0 0);
+  --accent: oklch(0.97 0 0);
+  --accent-foreground: oklch(0.205 0 0);
+  --destructive: oklch(0.577 0.245 27.325);
+  --destructive-foreground: oklch(0.577 0.245 27.325);
+  --ring: oklch(0.708 0 0);
+  --radius: 0.625rem;
 }

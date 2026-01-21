@@ -33,20 +33,20 @@ export function StreamingIndicator({
 
   return (
     <div className={className}>
-      <div className="flex gap-3">
-        <div className="flex-shrink-0 w-8 h-8 rounded-full bg-muted flex items-center justify-center">
-          <BotIcon className="h-4 w-4" />
+      <div className="sui:flex sui:gap-3">
+        <div className="sui:shrink-0 sui:w-8 sui:h-8 sui:rounded-full sui:bg-muted sui:flex sui:items-center sui:justify-center">
+          <BotIcon className="sui:h-4 sui:w-4" />
         </div>
-        <div className="flex-1">
+        <div className="sui:flex-1">
           <motion.div
             initial={{ scale: 0.95, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className="flex items-center gap-2 px-4 py-2 rounded-2xl rounded-tl-md bg-muted text-sm w-fit"
+            className="sui:flex sui:items-center sui:gap-2 sui:px-4 sui:py-2 sui:rounded-2xl sui:rounded-tl-md sui:bg-muted sui:text-sm sui:w-fit"
           >
             {LoadingIcon && (
-              <LoadingIcon className="h-4 w-4 animate-spin text-primary" />
+              <LoadingIcon className="sui:h-4 sui:w-4 sui:animate-spin sui:text-primary" />
             )}
-            <span className="text-muted-foreground">{text}</span>
+            <span className="sui:text-muted-foreground">{text}</span>
           </motion.div>
         </div>
       </div>
