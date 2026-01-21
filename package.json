@@ -1,6 +1,6 @@
 {
   "name": "@rx-lab/dashboard-searching-ui",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "type": "module",
   "main": "./dist/searching-ui.js",
   "module": "./dist/searching-ui.js",
@@ -11,7 +11,9 @@
       "import": "./dist/searching-ui.js"
     }
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
