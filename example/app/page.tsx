@@ -40,7 +40,7 @@ export default function Dashboard() {
     limit?: number;
   }): Promise<SearchResult[]> => {
     const response = await fetch(
-      `/api/search?q=${encodeURIComponent(query)}&limit=${limit || 10}`
+      `/api/search?q=${encodeURIComponent(query)}&limit=${limit || 10}`,
     );
     return response.json();
   };
@@ -130,9 +130,12 @@ export default function Dashboard() {
               </li>
               <li>Type a query to see instant search results</li>
               <li>
-                Click the <strong>AI Agent</strong> toggle to switch to chat mode
+                Click the <strong>AI Agent</strong> toggle to switch to chat
+                mode
               </li>
-              <li>Send a message to see streaming AI responses with tool calls</li>
+              <li>
+                Send a message to see streaming AI responses with tool calls
+              </li>
               <li>Watch the custom tool renderers display search results</li>
             </ol>
           </section>
@@ -160,10 +163,8 @@ export default function Dashboard() {
             placeholder: "Ask me anything about the codebase...",
             streamingIcon: Brain,
             streamingText: (
-              <span className="flex items-center">
-                Analyzing...
-              </span>
-            )
+              <span className="flex items-center">Analyzing...</span>
+            ),
           },
         }}
         renderResult={(result, onSelect) => (
@@ -236,7 +237,13 @@ function FileIcon({ fileType }: { fileType?: string }) {
       );
     default:
       return (
-        <svg className={iconClass} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+        <svg
+          className={iconClass}
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+        >
           <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
           <polyline points="14 2 14 8 20 8" />
         </svg>

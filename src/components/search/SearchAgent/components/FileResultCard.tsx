@@ -64,12 +64,12 @@ export function FileResultCard({
       onClick={onClick}
       className={cn(
         "w-full text-left p-3 rounded-xl border bg-card hover:bg-accent/50 transition-colors group",
-        className
+        className,
       )}
     >
       <div className="flex items-start gap-3">
         {renderIcon && (
-          <div className="flex-shrink-0 mt-0.5">
+          <div className="shrink-0 mt-0.5">
             {renderIcon(file.fileType, file.mimeType)}
           </div>
         )}

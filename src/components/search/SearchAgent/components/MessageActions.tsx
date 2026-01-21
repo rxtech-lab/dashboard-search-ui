@@ -74,7 +74,7 @@ export function MessageActions({
         className={cn(
           "flex items-center gap-0.5 mt-1",
           isUser ? "justify-end" : "justify-start pl-10",
-          className
+          className,
         )}
       >
         {/* Copy */}
@@ -114,11 +114,7 @@ export function MessageActions({
             </Button>
           </TooltipTrigger>
           <TooltipContent side="bottom">
-            <p>
-              {isUser
-                ? "Regenerate from here"
-                : "Regenerate response"}
-            </p>
+            <p>{isUser ? "Regenerate from here" : "Regenerate response"}</p>
           </TooltipContent>
         </Tooltip>
       </div>

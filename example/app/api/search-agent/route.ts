@@ -19,7 +19,8 @@ const MOCK_SEARCH_RESULTS = [
   {
     id: "1",
     title: "README.md",
-    snippet: "A React component library for building AI-powered search interfaces",
+    snippet:
+      "A React component library for building AI-powered search interfaces",
     score: 0.95,
   },
   {
@@ -78,7 +79,11 @@ export async function POST(req: Request) {
           chunkDelayInMs: 30,
           chunks: [
             // Tool call 1: search_files
-            { type: "tool-input-start", id: "call-1", toolName: "search_files" },
+            {
+              type: "tool-input-start",
+              id: "call-1",
+              toolName: "search_files",
+            },
             { type: "tool-input-delta", id: "call-1", delta: searchFilesInput },
             { type: "tool-input-end", id: "call-1" },
             {
@@ -89,8 +94,16 @@ export async function POST(req: Request) {
             },
 
             // Tool call 2: display_results
-            { type: "tool-input-start", id: "call-2", toolName: "display_results" },
-            { type: "tool-input-delta", id: "call-2", delta: displayResultsInput },
+            {
+              type: "tool-input-start",
+              id: "call-2",
+              toolName: "display_results",
+            },
+            {
+              type: "tool-input-delta",
+              id: "call-2",
+              delta: displayResultsInput,
+            },
             { type: "tool-input-end", id: "call-2" },
             {
               type: "tool-call",

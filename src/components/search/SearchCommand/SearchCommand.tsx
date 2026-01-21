@@ -59,7 +59,7 @@ export interface SearchParams {
  * Props for the SearchCommand component
  */
 export interface SearchCommandProps<
-  TResult extends BaseSearchResult = BaseSearchResult
+  TResult extends BaseSearchResult = BaseSearchResult,
 > {
   /** Whether the dialog is open */
   open: boolean;
@@ -137,7 +137,9 @@ export interface SearchCommandProps<
  * />
  * ```
  */
-export function SearchCommand<TResult extends BaseSearchResult = BaseSearchResult>({
+export function SearchCommand<
+  TResult extends BaseSearchResult = BaseSearchResult,
+>({
   open,
   onOpenChange,
   onSearch,
@@ -160,7 +162,7 @@ export function SearchCommand<TResult extends BaseSearchResult = BaseSearchResul
   const [results, setResults] = useState<TResult[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [searchType, setSearchType] = useState(
-    defaultSearchType || searchTypes?.[0]?.id || ""
+    defaultSearchType || searchTypes?.[0]?.id || "",
   );
   const [mode, setMode] = useState<"quick" | "agent">("quick");
   const [agentQuery, setAgentQuery] = useState("");
@@ -193,7 +195,7 @@ export function SearchCommand<TResult extends BaseSearchResult = BaseSearchResul
         sessionStorage.setItem(chatHistoryStorageKey, JSON.stringify(messages));
       }
     },
-    [chatHistoryStorageKey]
+    [chatHistoryStorageKey],
   );
 
   const hasChatHistory = isHydrated && chatHistory.length > 0;
@@ -221,7 +223,7 @@ export function SearchCommand<TResult extends BaseSearchResult = BaseSearchResul
         setIsLoading(false);
       }
     },
-    [onSearch, searchType, limit]
+    [onSearch, searchType, limit],
   );
 
   // Debounce effect - only in quick mode
@@ -272,7 +274,7 @@ export function SearchCommand<TResult extends BaseSearchResult = BaseSearchResul
     (messages: UIMessage[]) => {
       setChatHistory(messages);
     },
-    [setChatHistory]
+    [setChatHistory],
   );
 
   const handleBackToQuick = () => {
@@ -384,52 +386,53 @@ export function SearchCommand<TResult extends BaseSearchResult = BaseSearchResul
               }}
             />
             <CommandList>
-              {isLoading
-                ? (renderLoading || defaultRenderLoading)()
-                : (
-                  <>
-                    {results.length === 0 && (
-                      renderEmpty
-                        ? renderEmpty(query, false)
-                        : defaultRenderEmpty(query)
-                    )}
+              {isLoading ? (
+                (renderLoading || defaultRenderLoading)()
+              ) : (
+                <>
+                  {results.length === 0 &&
+                    (renderEmpty
+                      ? renderEmpty(query, false)
+                      : defaultRenderEmpty(query))}
 
-                    {results.length > 0 && (
-                      <CommandGroup heading="Results">
-                        {results.map((result) =>
-                          renderResult
-                            ? renderResult(result, () => handleSelect(result))
-                            : defaultRenderResult(result, () =>
-                              handleSelect(result)
-                            )
-                        )}
-                      </CommandGroup>
-                    )}
-                  </>
-                )}
+                  {results.length > 0 && (
+                    <CommandGroup heading="Results">
+                      {results.map((result) =>
+                        renderResult
+                          ? renderResult(result, () => handleSelect(result))
+                          : defaultRenderResult(result, () =>
+                              handleSelect(result),
+                            ),
+                      )}
+                    </CommandGroup>
+                  )}
+                </>
+              )}
             </CommandList>
 
             {/* Footer */}
             <div className="border-t p-2 flex items-center justify-between">
               {/* Search type selector */}
-              {showSearchTypeSelector && searchTypes && searchTypes.length > 0 && (
-                <div className="flex items-center gap-2">
-                  {searchTypes.map((type) => (
-                    <button
-                      key={type.id}
-                      onClick={() => setSearchType(type.id)}
-                      className={cn(
-                        "px-2 py-1 text-xs rounded-md transition-colors",
-                        searchType === type.id
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-muted text-muted-foreground hover:bg-muted/80"
-                      )}
-                    >
-                      {type.label}
-                    </button>
-                  ))}
-                </div>
-              )}
+              {showSearchTypeSelector &&
+                searchTypes &&
+                searchTypes.length > 0 && (
+                  <div className="flex items-center gap-2">
+                    {searchTypes.map((type) => (
+                      <button
+                        key={type.id}
+                        onClick={() => setSearchType(type.id)}
+                        className={cn(
+                          "px-2 py-1 text-xs rounded-md transition-colors",
+                          searchType === type.id
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-muted text-muted-foreground hover:bg-muted/80",
+                        )}
+                      >
+                        {type.label}
+                      </button>
+                    ))}
+                  </div>
+                )}
 
               {/* Right side hints */}
               <div className="flex items-center gap-3 text-xs text-muted-foreground ml-auto">

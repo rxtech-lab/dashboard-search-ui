@@ -1,13 +1,7 @@
 import { useRef, useEffect, useState } from "react";
 import type { ComponentType, ReactNode } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  ArrowLeft,
-  ArrowUp,
-  Sparkles,
-  Square,
-  Trash2,
-} from "lucide-react";
+import { ArrowLeft, ArrowUp, Sparkles, Square, Trash2 } from "lucide-react";
 import type { UIMessage } from "ai";
 import { Chat } from "@ai-sdk/react";
 import { Button } from "@/components/ui/button";
@@ -255,7 +249,7 @@ export function SearchAgent({
 
       case "regenerate": {
         const messageIndex = messages.findIndex(
-          (m) => m.id === action.messageId
+          (m) => m.id === action.messageId,
         );
         if (messageIndex === -1) break;
 
@@ -418,7 +412,10 @@ export function SearchAgent({
                 {renderStreamingIndicator ? (
                   renderStreamingIndicator()
                 ) : (
-                  <StreamingIndicator text={streamingText} loadingIcon={streamingIcon} />
+                  <StreamingIndicator
+                    text={streamingText}
+                    loadingIcon={streamingIcon}
+                  />
                 )}
               </motion.div>
             )}

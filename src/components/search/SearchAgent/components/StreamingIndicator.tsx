@@ -43,7 +43,9 @@ export function StreamingIndicator({
             animate={{ scale: 1, opacity: 1 }}
             className="flex items-center gap-2 px-4 py-2 rounded-2xl rounded-tl-md bg-muted text-sm w-fit"
           >
-            {LoadingIcon && <LoadingIcon className="h-4 w-4 animate-spin text-primary" />}
+            {LoadingIcon && (
+              <LoadingIcon className="h-4 w-4 animate-spin text-primary" />
+            )}
             <span className="text-muted-foreground">{text}</span>
           </motion.div>
         </div>

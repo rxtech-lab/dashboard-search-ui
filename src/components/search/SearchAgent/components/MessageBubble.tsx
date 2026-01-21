@@ -77,7 +77,9 @@ export function MessageBubble({
 
   // Extract text content from parts
   const textContent = message.parts
-    .filter((part): part is { type: "text"; text: string } => part.type === "text")
+    .filter(
+      (part): part is { type: "text"; text: string } => part.type === "text",
+    )
     .map((part) => part.text)
     .join("");
 
@@ -99,10 +101,14 @@ export function MessageBubble({
       <div
         className={cn(
           "flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center",
-          isUser ? "bg-primary text-primary-foreground" : "bg-muted"
+          isUser ? "bg-primary text-primary-foreground" : "bg-muted",
         )}
       >
-        {isUser ? <UserIcon className="h-4 w-4" /> : <BotIcon className="h-4 w-4" />}
+        {isUser ? (
+          <UserIcon className="h-4 w-4" />
+        ) : (
+          <BotIcon className="h-4 w-4" />
+        )}
       </div>
 
       <div className={cn("flex-1 space-y-3", isUser && "text-right")}>
@@ -115,7 +121,11 @@ export function MessageBubble({
               const ToolRenderer = toolResultRenderers[toolName];
 
               // If we have a custom renderer and output is available, use it
-              if (ToolRenderer && tool.state === "output-available" && tool.output) {
+              if (
+                ToolRenderer &&
+                tool.state === "output-available" &&
+                tool.output
+              ) {
                 return (
                   <div key={`${tool.toolCallId || idx}-${idx}`}>
                     <ToolRenderer
@@ -156,7 +166,7 @@ export function MessageBubble({
               "inline-block px-4 py-2 rounded-2xl text-sm max-w-[85%]",
               isUser
                 ? "bg-primary text-primary-foreground rounded-tr-md"
-                : "bg-muted rounded-tl-md text-left"
+                : "bg-muted rounded-tl-md text-left",
             )}
           >
             {isUser ? (
