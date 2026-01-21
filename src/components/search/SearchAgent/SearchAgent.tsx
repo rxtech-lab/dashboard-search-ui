@@ -313,24 +313,24 @@ export function SearchAgent({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
       transition={{ duration: 0.2 }}
-      className={cn("flex flex-col h-full", className)}
+      className={cn("sui:flex sui:flex-col sui:h-full", className)}
     >
       {/* Header */}
-      <div className="flex items-center gap-2 px-3 py-2 border-b pr-12">
+      <div className="sui:flex sui:items-center sui:gap-2 sui:px-3 sui:py-2 sui:border-b sui:pr-12">
         {showBackButton && onBack && (
           <Button
             variant="ghost"
             size="sm"
             onClick={onBack}
-            className="h-8 px-2"
+            className="sui:h-8 sui:px-2"
             aria-label="Back"
           >
-            <ArrowLeft className="h-4 w-4 mr-1" />
+            <ArrowLeft className="sui:h-4 sui:w-4 sui:mr-1" />
             Back
           </Button>
         )}
-        <div className="flex items-center gap-2 text-sm font-medium flex-1">
-          <HeaderIcon className="h-4 w-4 text-primary" />
+        <div className="sui:flex sui:items-center sui:gap-2 sui:text-sm sui:font-medium sui:flex-1">
+          <HeaderIcon className="sui:h-4 sui:w-4 sui:text-primary" />
           {title}
         </div>
         {showClearButton && onClearHistory && messages.length > 0 && (
@@ -338,18 +338,18 @@ export function SearchAgent({
             variant="ghost"
             size="sm"
             onClick={handleClearHistory}
-            className="h-8 px-2 text-muted-foreground hover:text-destructive"
+            className="sui:h-8 sui:px-2 sui:text-muted-foreground hover:sui:text-destructive"
             aria-label="Clear history"
           >
-            <Trash2 className="h-4 w-4 mr-1" />
+            <Trash2 className="sui:h-4 sui:w-4 sui:mr-1" />
             Clear
           </Button>
         )}
       </div>
 
       {/* Messages */}
-      <ScrollArea className="flex-1 min-h-0 px-3">
-        <div className="py-4 space-y-4">
+      <ScrollArea className="sui:flex-1 sui:min-h-0 sui:px-3">
+        <div className="sui:py-4 sui:space-y-4">
           <AnimatePresence mode="popLayout">
             {messages.map((message) => {
               // Skip empty assistant messages
@@ -425,8 +425,8 @@ export function SearchAgent({
       </ScrollArea>
 
       {/* Input */}
-      <div className="border-t p-3">
-        <div className="flex items-center gap-2">
+      <div className="sui:border-t sui:p-3">
+        <div className="sui:flex sui:items-center sui:gap-2">
           <input
             ref={inputRef}
             type="text"
@@ -435,7 +435,7 @@ export function SearchAgent({
             onKeyDown={handleKeyDown}
             placeholder={isProcessing ? placeholderProcessing : placeholder}
             disabled={isProcessing}
-            className="flex-1 bg-transparent text-sm outline-none placeholder:text-muted-foreground disabled:opacity-50"
+            className="sui:flex-1 sui:bg-transparent sui:text-sm sui:outline-none placeholder:sui:text-muted-foreground disabled:sui:opacity-50"
           />
           <AnimatePresence mode="wait" initial={false}>
             {isProcessing ? (
@@ -450,10 +450,10 @@ export function SearchAgent({
                   size="sm"
                   variant="ghost"
                   onClick={stop}
-                  className="h-6 w-6 p-0"
+                  className="sui:h-6 sui:w-6 sui:p-0"
                   aria-label="Stop"
                 >
-                  <Square className="h-4 w-4 fill-current" />
+                  <Square className="sui:h-4 sui:w-4 sui:fill-current" />
                 </Button>
               </motion.div>
             ) : (
@@ -469,10 +469,10 @@ export function SearchAgent({
                   variant="ghost"
                   onClick={handleSubmit}
                   disabled={!inputValue.trim()}
-                  className="h-6 w-6 p-0 rounded-full bg-primary hover:bg-primary/90"
+                  className="sui:h-6 sui:w-6 sui:p-0 sui:rounded-full sui:bg-primary hover:sui:bg-primary/90"
                   aria-label="Send"
                 >
-                  <ArrowUp className="h-4 w-4 text-primary-foreground" />
+                  <ArrowUp className="sui:h-4 sui:w-4 sui:text-primary-foreground" />
                 </Button>
               </motion.div>
             )}

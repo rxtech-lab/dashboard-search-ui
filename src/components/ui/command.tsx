@@ -20,7 +20,7 @@ function Command({
       data-slot="command"
       data-sui
       className={cn(
-        "bg-popover text-popover-foreground flex h-full w-full flex-col overflow-hidden rounded-md",
+        "sui:bg-popover sui:text-popover-foreground sui:flex sui:h-full sui:w-full sui:flex-col sui:overflow-hidden sui:rounded-md",
         className,
       )}
       {...props}
@@ -45,17 +45,17 @@ function CommandDialog({
 }) {
   return (
     <Dialog {...props}>
-      <DialogHeader className="sr-only">
+      <DialogHeader className="sui:sr-only">
         <DialogTitle>{title}</DialogTitle>
         <DialogDescription>{description}</DialogDescription>
       </DialogHeader>
       <DialogContent
-        className={cn("overflow-hidden p-0", className)}
+        className={cn("sui:overflow-hidden sui:p-0", className)}
         showCloseButton={showCloseButton}
       >
         <Command
           shouldFilter={shouldFilter}
-          className="**:[[cmdk-group-heading]]:text-muted-foreground **:data-[slot=command-input-wrapper]:h-12 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group]]:px-2 [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-input-wrapper]_svg]:h-5 [&_[cmdk-input-wrapper]_svg]:w-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:h-5 [&_[cmdk-item]_svg]:w-5"
+          className="**:[[cmdk-group-heading]]:sui:text-muted-foreground **:data-[slot=command-input-wrapper]:sui:h-12 [&_[cmdk-group-heading]]:sui:px-2 [&_[cmdk-group-heading]]:sui:font-medium [&_[cmdk-group]]:sui:px-2 [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:sui:pt-0 [&_[cmdk-input-wrapper]_svg]:sui:h-5 [&_[cmdk-input-wrapper]_svg]:sui:w-5 [&_[cmdk-input]]:sui:h-12 [&_[cmdk-item]]:sui:px-2 [&_[cmdk-item]]:sui:py-3 [&_[cmdk-item]_svg]:sui:h-5 [&_[cmdk-item]_svg]:sui:w-5"
         >
           {children}
         </Command>
@@ -71,13 +71,13 @@ function CommandInput({
   return (
     <div
       data-slot="command-input-wrapper"
-      className="flex h-9 items-center gap-2 border-b px-3"
+      className="sui:flex sui:h-9 sui:items-center sui:gap-2 sui:border-b sui:px-3"
     >
-      <SearchIcon className="size-4 shrink-0 opacity-50" />
+      <SearchIcon className="sui:size-4 sui:shrink-0 sui:opacity-50" />
       <CommandPrimitive.Input
         data-slot="command-input"
         className={cn(
-          "placeholder:text-muted-foreground flex h-10 w-full rounded-md bg-transparent py-3 text-sm outline-hidden disabled:cursor-not-allowed disabled:opacity-50",
+          "placeholder:sui:text-muted-foreground sui:flex sui:h-10 sui:w-full sui:rounded-md sui:bg-transparent sui:py-3 sui:text-sm sui:outline-hidden disabled:sui:cursor-not-allowed disabled:sui:opacity-50",
           className,
         )}
         {...props}
@@ -94,7 +94,7 @@ function CommandList({
     <CommandPrimitive.List
       data-slot="command-list"
       className={cn(
-        "max-h-[600px] scroll-py-1 overflow-x-hidden overflow-y-auto",
+        "sui:max-h-[600px] sui:scroll-py-1 sui:overflow-x-hidden sui:overflow-y-auto",
         className,
       )}
       {...props}
@@ -108,7 +108,7 @@ function CommandEmpty({
   return (
     <CommandPrimitive.Empty
       data-slot="command-empty"
-      className="py-6 text-center text-sm"
+      className="sui:py-6 sui:text-center sui:text-sm"
       {...props}
     />
   );
@@ -122,7 +122,7 @@ function CommandGroup({
     <CommandPrimitive.Group
       data-slot="command-group"
       className={cn(
-        "text-foreground [&_[cmdk-group-heading]]:text-muted-foreground overflow-hidden p-1 [&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:py-1.5 [&_[cmdk-group-heading]]:text-xs [&_[cmdk-group-heading]]:font-medium",
+        "sui:text-foreground [&_[cmdk-group-heading]]:sui:text-muted-foreground sui:overflow-hidden sui:p-1 [&_[cmdk-group-heading]]:sui:px-2 [&_[cmdk-group-heading]]:sui:py-1.5 [&_[cmdk-group-heading]]:sui:text-xs [&_[cmdk-group-heading]]:sui:font-medium",
         className,
       )}
       {...props}
@@ -137,7 +137,7 @@ function CommandSeparator({
   return (
     <CommandPrimitive.Separator
       data-slot="command-separator"
-      className={cn("bg-border -mx-1 h-px", className)}
+      className={cn("sui:bg-border sui:-mx-1 sui:h-px", className)}
       {...props}
     />
   );
@@ -151,7 +151,7 @@ function CommandItem({
     <CommandPrimitive.Item
       data-slot="command-item"
       className={cn(
-        "data-[selected=true]:bg-accent data-[selected=true]:text-accent-foreground [&_svg:not([class*='text-'])]:text-muted-foreground relative flex cursor-default items-center gap-2 rounded-sm px-2 py-1.5 text-sm outline-hidden select-none data-[disabled=true]:pointer-events-none data-[disabled=true]:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "data-[selected=true]:sui:bg-accent data-[selected=true]:sui:text-accent-foreground [&_svg:not([class*='text-'])]:sui:text-muted-foreground sui:relative sui:flex sui:cursor-default sui:items-center sui:gap-2 sui:rounded-sm sui:px-2 sui:py-1.5 sui:text-sm sui:outline-hidden sui:select-none data-[disabled=true]:sui:pointer-events-none data-[disabled=true]:sui:opacity-50 [&_svg]:sui:pointer-events-none [&_svg]:sui:shrink-0 [&_svg:not([class*='size-'])]:sui:size-4",
         className,
       )}
       {...props}
@@ -167,7 +167,7 @@ function CommandShortcut({
     <span
       data-slot="command-shortcut"
       className={cn(
-        "text-muted-foreground ml-auto text-xs tracking-widest",
+        "sui:text-muted-foreground sui:ml-auto sui:text-xs sui:tracking-widest",
         className,
       )}
       {...props}

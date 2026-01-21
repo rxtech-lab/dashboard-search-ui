@@ -12,12 +12,12 @@ function ScrollArea({
     <ScrollAreaPrimitive.Root
       data-slot="scroll-area"
       data-sui
-      className={cn("relative", className)}
+      className={cn("sui:relative", className)}
       {...props}
     >
       <ScrollAreaPrimitive.Viewport
         data-slot="scroll-area-viewport"
-        className="focus-visible:ring-ring/50 size-full rounded-[inherit] transition-[color,box-shadow] outline-none focus-visible:ring-[3px] focus-visible:outline-1"
+        className="focus-visible:sui:ring-ring/50 sui:size-full sui:rounded-[inherit] sui:transition-[color,box-shadow] sui:outline-none focus-visible:sui:ring-[3px] focus-visible:sui:outline-1"
       >
         {children}
       </ScrollAreaPrimitive.Viewport>
@@ -37,18 +37,18 @@ function ScrollBar({
       data-slot="scroll-area-scrollbar"
       orientation={orientation}
       className={cn(
-        "flex touch-none p-px transition-colors select-none",
+        "sui:flex sui:touch-none sui:p-px sui:transition-colors sui:select-none",
         orientation === "vertical" &&
-          "h-full w-2.5 border-l border-l-transparent",
+          "sui:h-full sui:w-2.5 sui:border-l sui:border-l-transparent",
         orientation === "horizontal" &&
-          "h-2.5 flex-col border-t border-t-transparent",
+          "sui:h-2.5 sui:flex-col sui:border-t sui:border-t-transparent",
         className,
       )}
       {...props}
     >
       <ScrollAreaPrimitive.ScrollAreaThumb
         data-slot="scroll-area-thumb"
-        className="bg-border relative flex-1 rounded-full"
+        className="sui:bg-border sui:relative sui:flex-1 sui:rounded-full"
       />
     </ScrollAreaPrimitive.ScrollAreaScrollbar>
   );
