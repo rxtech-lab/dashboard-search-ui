@@ -396,7 +396,13 @@ export function SearchCommand<
                       : defaultRenderEmpty(query))}
 
                   {results.length > 0 && (
-                    <CommandGroup heading="Results">
+                    <CommandGroup
+                      heading={
+                        <span className="sui:text-sm sui:text-gray-600 dark:sui:text-gray-600">
+                          Results
+                        </span>
+                      }
+                    >
                       {results.map((result) =>
                         renderResult
                           ? renderResult(result, () => handleSelect(result))
