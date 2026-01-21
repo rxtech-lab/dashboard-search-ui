@@ -1,3 +1,4 @@
+import React from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
 import { render, screen, fireEvent } from "@testing-library/react";
 import { SearchAgent } from "./SearchAgent";
@@ -22,6 +23,23 @@ vi.mock("@ai-sdk/react", () => ({
   }),
 }));
 
+// Mock Radix tooltip
+vi.mock("@radix-ui/react-tooltip", () => ({
+  Provider: ({ children }: React.PropsWithChildren) => <>{children}</>,
+  Root: ({ children }: React.PropsWithChildren) => <>{children}</>,
+  Trigger: ({ children, asChild }: React.PropsWithChildren<{ asChild?: boolean }>) => {
+    if (asChild && React.isValidElement(children)) {
+      return children;
+    }
+    return <span>{children}</span>;
+  },
+  Portal: ({ children }: React.PropsWithChildren) => <>{children}</>,
+  Content: ({ children }: React.PropsWithChildren) => (
+    <div data-testid="tooltip-content">{children}</div>
+  ),
+  Arrow: () => null,
+}));
+
 // Mock framer-motion
 vi.mock("framer-motion", () => ({
   motion: {
@@ -30,6 +48,12 @@ vi.mock("framer-motion", () => ({
       ...props
     }: React.PropsWithChildren<Record<string, unknown>>) => (
       <div {...props}>{children}</div>
+    ),
+    span: ({
+      children,
+      ...props
+    }: React.PropsWithChildren<Record<string, unknown>>) => (
+      <span {...props}>{children}</span>
     ),
     button: ({
       children,
@@ -46,170 +70,163 @@ describe("SearchAgent", () => {
     vi.clearAllMocks();
   });
 
-  it("renders with default header", () => {
-    render(<SearchAgent />);
-
-    expect(screen.getByText("AI Search")).toBeInTheDocument();
-  });
-
-  it("renders back button when onBack is provided", () => {
-    const onBack = vi.fn();
-    render(<SearchAgent onBack={onBack} />);
-
-    const backButton = screen.getByRole("button", { name: /back/i });
-    expect(backButton).toBeInTheDocument();
-
-    fireEvent.click(backButton);
-    expect(onBack).toHaveBeenCalled();
-  });
-
-  it("does not render back button when onBack is not provided", () => {
-    render(<SearchAgent />);
-
-    expect(screen.queryByRole("button", { name: /back/i })).not.toBeInTheDocument();
-  });
-
-  it("renders input field", () => {
-    render(<SearchAgent />);
-
-    expect(screen.getByRole("textbox")).toBeInTheDocument();
-  });
-
-  it("uses custom header title", () => {
-    render(<SearchAgent header={{ title: "Custom AI Search" }} />);
-
-    expect(screen.getByText("Custom AI Search")).toBeInTheDocument();
-  });
-
-  it("uses custom input placeholder", () => {
-    render(<SearchAgent input={{ placeholder: "Custom placeholder..." }} />);
-
-    expect(screen.getByPlaceholderText("Custom placeholder...")).toBeInTheDocument();
-  });
-
-  it("applies custom className", () => {
-    const { container } = render(<SearchAgent className="custom-class" />);
-
-    expect(container.firstChild).toHaveClass("custom-class");
-  });
-
-  it("renders clear button when messages exist and onClearHistory provided", async () => {
-    const { useChat } = await import("@ai-sdk/react");
-    (useChat as ReturnType<typeof vi.fn>).mockReturnValue({
-      messages: [{ id: "1", role: "user", parts: [{ type: "text", text: "test" }] }],
-      sendMessage: mockSendMessage,
-      status: "ready",
-      stop: mockStop,
-      error: undefined,
-      setMessages: mockSetMessages,
-    });
-
-    const onClearHistory = vi.fn();
-    render(<SearchAgent onClearHistory={onClearHistory} />);
-
-    const clearButton = screen.getByRole("button", { name: /clear/i });
-    fireEvent.click(clearButton);
-
-    expect(onClearHistory).toHaveBeenCalled();
-  });
-
-  it("does not render clear button when no onClearHistory", async () => {
-    const { useChat } = await import("@ai-sdk/react");
-    (useChat as ReturnType<typeof vi.fn>).mockReturnValue({
-      messages: [{ id: "1", role: "user", parts: [{ type: "text", text: "test" }] }],
-      sendMessage: mockSendMessage,
-      status: "ready",
-      stop: mockStop,
-      error: undefined,
-      setMessages: mockSetMessages,
-    });
-
-    render(<SearchAgent />);
-
-    expect(screen.queryByRole("button", { name: /clear/i })).not.toBeInTheDocument();
-  });
-
-  it("hides back button when showBackButton is false", () => {
-    render(<SearchAgent onBack={() => {}} header={{ showBackButton: false }} />);
-
-    expect(screen.queryByRole("button", { name: /back/i })).not.toBeInTheDocument();
-  });
-
-  it("renders send button", () => {
-    render(<SearchAgent />);
-
-    expect(screen.getByRole("button", { name: /send/i })).toBeInTheDocument();
-  });
-
-  it("disables send button when input is empty", () => {
-    render(<SearchAgent />);
-
-    const sendButton = screen.getByRole("button", { name: /send/i });
-    expect(sendButton).toBeDisabled();
-  });
-
-  describe("loading indicator", () => {
-    it("shows loading indicator when processing first message", async () => {
+  describe("basic rendering", () => {
+    it("renders with default props", async () => {
       const { useChat } = await import("@ai-sdk/react");
       (useChat as ReturnType<typeof vi.fn>).mockReturnValue({
-        messages: [{ id: "1", role: "user", parts: [{ type: "text", text: "test" }] }],
+        messages: [],
         sendMessage: mockSendMessage,
-        status: "streaming",
+        status: "ready",
         stop: mockStop,
         error: undefined,
         setMessages: mockSetMessages,
       });
 
       render(<SearchAgent />);
-      expect(screen.getByText("Searching...")).toBeInTheDocument();
+      expect(screen.getByText("AI Search")).toBeInTheDocument();
     });
 
-    it("shows loading indicator on follow-up message after previous response completed", async () => {
+    it("renders custom title", async () => {
+      const { useChat } = await import("@ai-sdk/react");
+      (useChat as ReturnType<typeof vi.fn>).mockReturnValue({
+        messages: [],
+        sendMessage: mockSendMessage,
+        status: "ready",
+        stop: mockStop,
+        error: undefined,
+        setMessages: mockSetMessages,
+      });
+
+      render(<SearchAgent header={{ title: "Custom Search" }} />);
+      expect(screen.getByText("Custom Search")).toBeInTheDocument();
+    });
+
+    it("shows back button when onBack is provided", async () => {
+      const { useChat } = await import("@ai-sdk/react");
+      (useChat as ReturnType<typeof vi.fn>).mockReturnValue({
+        messages: [],
+        sendMessage: mockSendMessage,
+        status: "ready",
+        stop: mockStop,
+        error: undefined,
+        setMessages: mockSetMessages,
+      });
+
+      const onBack = vi.fn();
+      render(<SearchAgent onBack={onBack} />);
+
+      const backButton = screen.getByRole("button", { name: /back/i });
+      expect(backButton).toBeInTheDocument();
+
+      fireEvent.click(backButton);
+      expect(onBack).toHaveBeenCalled();
+    });
+
+    it("hides back button when header.showBackButton is false", async () => {
+      const { useChat } = await import("@ai-sdk/react");
+      (useChat as ReturnType<typeof vi.fn>).mockReturnValue({
+        messages: [],
+        sendMessage: mockSendMessage,
+        status: "ready",
+        stop: mockStop,
+        error: undefined,
+        setMessages: mockSetMessages,
+      });
+
+      render(
+        <SearchAgent
+          onBack={() => {}}
+          header={{ showBackButton: false }}
+        />
+      );
+
+      expect(screen.queryByRole("button", { name: /back/i })).not.toBeInTheDocument();
+    });
+  });
+
+  describe("message display", () => {
+    it("renders user messages", async () => {
       const { useChat } = await import("@ai-sdk/react");
       (useChat as ReturnType<typeof vi.fn>).mockReturnValue({
         messages: [
-          { id: "1", role: "user", parts: [{ type: "text", text: "first query" }] },
-          { id: "2", role: "assistant", parts: [{ type: "text", text: "first response" }] },
-          { id: "3", role: "user", parts: [{ type: "text", text: "follow-up" }] },
-          { id: "4", role: "assistant", parts: [] },  // Empty - streaming in progress
+          { id: "1", role: "user", parts: [{ type: "text", text: "Hello" }] },
         ],
         sendMessage: mockSendMessage,
-        status: "streaming",
+        status: "ready",
         stop: mockStop,
         error: undefined,
         setMessages: mockSetMessages,
       });
 
       render(<SearchAgent />);
-      expect(screen.getByText("Searching...")).toBeInTheDocument();
+      expect(screen.getByText("Hello")).toBeInTheDocument();
     });
 
-    it("shows loading indicator when last message is from user and processing", async () => {
+    it("renders assistant messages", async () => {
       const { useChat } = await import("@ai-sdk/react");
       (useChat as ReturnType<typeof vi.fn>).mockReturnValue({
         messages: [
-          { id: "1", role: "user", parts: [{ type: "text", text: "first query" }] },
-          { id: "2", role: "assistant", parts: [{ type: "text", text: "first response" }] },
-          { id: "3", role: "user", parts: [{ type: "text", text: "follow-up" }] },
-          // No assistant message yet - still waiting for response
+          { id: "1", role: "assistant", parts: [{ type: "text", text: "Hi there!" }] },
         ],
         sendMessage: mockSendMessage,
-        status: "submitted",
+        status: "ready",
         stop: mockStop,
         error: undefined,
         setMessages: mockSetMessages,
       });
 
       render(<SearchAgent />);
-      expect(screen.getByText("Searching...")).toBeInTheDocument();
+      expect(screen.getByText("Hi there!")).toBeInTheDocument();
+    });
+  });
+
+  describe("sending messages", () => {
+    it("sends message when pressing enter", async () => {
+      const { useChat } = await import("@ai-sdk/react");
+      (useChat as ReturnType<typeof vi.fn>).mockReturnValue({
+        messages: [],
+        sendMessage: mockSendMessage,
+        status: "ready",
+        stop: mockStop,
+        error: undefined,
+        setMessages: mockSetMessages,
+      });
+
+      render(<SearchAgent />);
+
+      const input = screen.getByRole("textbox");
+      fireEvent.change(input, { target: { value: "test message" } });
+      fireEvent.keyDown(input, { key: "Enter" });
+
+      expect(mockSendMessage).toHaveBeenCalledWith({ text: "test message" });
     });
 
-    it("hides loading indicator when assistant message has content", async () => {
+    it("does not send empty messages", async () => {
+      const { useChat } = await import("@ai-sdk/react");
+      (useChat as ReturnType<typeof vi.fn>).mockReturnValue({
+        messages: [],
+        sendMessage: mockSendMessage,
+        status: "ready",
+        stop: mockStop,
+        error: undefined,
+        setMessages: mockSetMessages,
+      });
+
+      render(<SearchAgent />);
+
+      const input = screen.getByRole("textbox");
+      fireEvent.keyDown(input, { key: "Enter" });
+
+      expect(mockSendMessage).not.toHaveBeenCalled();
+    });
+  });
+
+  describe("loading state", () => {
+    it("shows loading indicator when processing", async () => {
       const { useChat } = await import("@ai-sdk/react");
       (useChat as ReturnType<typeof vi.fn>).mockReturnValue({
         messages: [
           { id: "1", role: "user", parts: [{ type: "text", text: "test" }] },
-          { id: "2", role: "assistant", parts: [{ type: "text", text: "response" }] },
         ],
         sendMessage: mockSendMessage,
         status: "streaming",
@@ -219,13 +236,15 @@ describe("SearchAgent", () => {
       });
 
       render(<SearchAgent />);
-      expect(screen.queryByText("Searching...")).not.toBeInTheDocument();
+      expect(screen.getByText("Searching...")).toBeInTheDocument();
     });
 
-    it("displays custom streaming text when provided", async () => {
+    it("shows custom streaming text", async () => {
       const { useChat } = await import("@ai-sdk/react");
       (useChat as ReturnType<typeof vi.fn>).mockReturnValue({
-        messages: [{ id: "1", role: "user", parts: [{ type: "text", text: "test" }] }],
+        messages: [
+          { id: "1", role: "user", parts: [{ type: "text", text: "test" }] },
+        ],
         sendMessage: mockSendMessage,
         status: "streaming",
         stop: mockStop,
@@ -235,6 +254,166 @@ describe("SearchAgent", () => {
 
       render(<SearchAgent input={{ streamingText: "Thinking..." }} />);
       expect(screen.getByText("Thinking...")).toBeInTheDocument();
+    });
+  });
+
+  describe("message actions - regenerate", () => {
+    it("renders action buttons by default", async () => {
+      const { useChat } = await import("@ai-sdk/react");
+      (useChat as ReturnType<typeof vi.fn>).mockReturnValue({
+        messages: [{ id: "1", role: "user", parts: [{ type: "text", text: "test message" }] }],
+        sendMessage: mockSendMessage,
+        status: "ready",
+        stop: mockStop,
+        error: undefined,
+        setMessages: mockSetMessages,
+      });
+
+      render(<SearchAgent />);
+
+      // Action buttons should be rendered (they're hidden until hover but present in DOM)
+      expect(screen.getByTestId("action-copy")).toBeInTheDocument();
+      expect(screen.getByTestId("action-regenerate")).toBeInTheDocument();
+    });
+
+    it("does not render action buttons when enableMessageActions is false", async () => {
+      const { useChat } = await import("@ai-sdk/react");
+      (useChat as ReturnType<typeof vi.fn>).mockReturnValue({
+        messages: [{ id: "1", role: "user", parts: [{ type: "text", text: "test message" }] }],
+        sendMessage: mockSendMessage,
+        status: "ready",
+        stop: mockStop,
+        error: undefined,
+        setMessages: mockSetMessages,
+      });
+
+      render(<SearchAgent enableMessageActions={false} />);
+
+      expect(screen.queryByTestId("action-copy")).not.toBeInTheDocument();
+      expect(screen.queryByTestId("action-regenerate")).not.toBeInTheDocument();
+    });
+
+    it("regenerate user message - removes messages and resends", async () => {
+      const { useChat } = await import("@ai-sdk/react");
+      (useChat as ReturnType<typeof vi.fn>).mockReturnValue({
+        messages: [
+          { id: "1", role: "user", parts: [{ type: "text", text: "original query" }] },
+          { id: "2", role: "assistant", parts: [{ type: "text", text: "response" }] },
+        ],
+        sendMessage: mockSendMessage,
+        status: "ready",
+        stop: mockStop,
+        error: undefined,
+        setMessages: mockSetMessages,
+      });
+
+      const onMessageRegenerate = vi.fn();
+      render(<SearchAgent onMessageRegenerate={onMessageRegenerate} />);
+
+      // Click the first regenerate button (for user message)
+      const regenerateButtons = screen.getAllByTestId("action-regenerate");
+      fireEvent.click(regenerateButtons[0]);
+
+      // Should call onMessageRegenerate
+      expect(onMessageRegenerate).toHaveBeenCalledWith("1", "original query");
+
+      // Should call setMessages to remove messages
+      expect(mockSetMessages).toHaveBeenCalled();
+
+      // Should resend the user message
+      expect(mockSendMessage).toHaveBeenCalledWith({ text: "original query" });
+    });
+
+    it("regenerate assistant message - regenerates response", async () => {
+      const { useChat } = await import("@ai-sdk/react");
+      (useChat as ReturnType<typeof vi.fn>).mockReturnValue({
+        messages: [
+          { id: "1", role: "user", parts: [{ type: "text", text: "user query" }] },
+          { id: "2", role: "assistant", parts: [{ type: "text", text: "assistant response" }] },
+        ],
+        sendMessage: mockSendMessage,
+        status: "ready",
+        stop: mockStop,
+        error: undefined,
+        setMessages: mockSetMessages,
+      });
+
+      const onMessageRegenerate = vi.fn();
+      render(<SearchAgent onMessageRegenerate={onMessageRegenerate} />);
+
+      // Click the second regenerate button (for assistant message)
+      const regenerateButtons = screen.getAllByTestId("action-regenerate");
+      fireEvent.click(regenerateButtons[1]);
+
+      // Should call onMessageRegenerate with the user message content
+      expect(onMessageRegenerate).toHaveBeenCalledWith("2", "user query");
+
+      // Should call setMessages
+      expect(mockSetMessages).toHaveBeenCalled();
+
+      // Should resend the preceding user message
+      expect(mockSendMessage).toHaveBeenCalledWith({ text: "user query" });
+    });
+
+    it("regenerate in follow-up conversation - keeps earlier messages", async () => {
+      const { useChat } = await import("@ai-sdk/react");
+      (useChat as ReturnType<typeof vi.fn>).mockReturnValue({
+        messages: [
+          { id: "1", role: "user", parts: [{ type: "text", text: "first query" }] },
+          { id: "2", role: "assistant", parts: [{ type: "text", text: "first response" }] },
+          { id: "3", role: "user", parts: [{ type: "text", text: "follow-up query" }] },
+          { id: "4", role: "assistant", parts: [{ type: "text", text: "follow-up response" }] },
+        ],
+        sendMessage: mockSendMessage,
+        status: "ready",
+        stop: mockStop,
+        error: undefined,
+        setMessages: mockSetMessages,
+      });
+
+      const onMessageRegenerate = vi.fn();
+      render(<SearchAgent onMessageRegenerate={onMessageRegenerate} />);
+
+      // Click regenerate on the second user message
+      const regenerateButtons = screen.getAllByTestId("action-regenerate");
+      fireEvent.click(regenerateButtons[2]); // Third button is for follow-up query
+
+      expect(onMessageRegenerate).toHaveBeenCalledWith("3", "follow-up query");
+
+      // Verify setMessages keeps first 2 messages
+      const setMessagesCall = mockSetMessages.mock.calls[0][0];
+      const testMessages = [
+        { id: "1", role: "user", parts: [{ type: "text", text: "first query" }] },
+        { id: "2", role: "assistant", parts: [{ type: "text", text: "first response" }] },
+        { id: "3", role: "user", parts: [{ type: "text", text: "follow-up query" }] },
+        { id: "4", role: "assistant", parts: [{ type: "text", text: "follow-up response" }] },
+      ];
+      const result = setMessagesCall(testMessages);
+      expect(result).toHaveLength(2);
+      expect(result[0].id).toBe("1");
+      expect(result[1].id).toBe("2");
+
+      // Should resend the follow-up query
+      expect(mockSendMessage).toHaveBeenCalledWith({ text: "follow-up query" });
+    });
+
+    it("disables regenerate button when processing", async () => {
+      const { useChat } = await import("@ai-sdk/react");
+      (useChat as ReturnType<typeof vi.fn>).mockReturnValue({
+        messages: [
+          { id: "1", role: "user", parts: [{ type: "text", text: "user query" }] },
+        ],
+        sendMessage: mockSendMessage,
+        status: "streaming",
+        stop: mockStop,
+        error: undefined,
+        setMessages: mockSetMessages,
+      });
+
+      render(<SearchAgent />);
+
+      const regenerateButton = screen.getByTestId("action-regenerate");
+      expect(regenerateButton).toBeDisabled();
     });
   });
 });

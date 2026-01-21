@@ -20,8 +20,10 @@ import {
 import {
   MessageBubble,
   StreamingIndicator,
+  MessageActions,
   type ToolResultRenderers,
   type ToolAction,
+  type MessageAction,
 } from "./components";
 
 /**
@@ -120,6 +122,12 @@ export interface SearchAgentProps {
 
   /** Additional class name */
   className?: string;
+
+  /** Enable action buttons on messages (default: true) */
+  enableMessageActions?: boolean;
+
+  /** Called when user initiates regenerate on a message */
+  onMessageRegenerate?: (messageId: string, originalContent: string) => void;
 }
 
 /**
@@ -158,6 +166,8 @@ export function SearchAgent({
   header = {},
   input: inputConfig = {},
   className,
+  enableMessageActions = true,
+  onMessageRegenerate,
 }: SearchAgentProps) {
   const {
     title = "AI Search",
@@ -200,6 +210,8 @@ export function SearchAgent({
     sendMessage,
     stop,
     hasContent,
+    getTextContent,
+    deleteMessageAndAfter,
   } = useSearchAgent(hookOptions);
 
   // Auto-scroll to bottom when messages change
@@ -233,6 +245,55 @@ export function SearchAgent({
 
   const handleClearHistory = () => {
     onClearHistory?.();
+  };
+
+  const handleMessageAction = (action: MessageAction) => {
+    switch (action.type) {
+      case "copy":
+        // Copy is handled in MessageActions, no additional action needed
+        break;
+
+      case "regenerate": {
+        const messageIndex = messages.findIndex(
+          (m) => m.id === action.messageId
+        );
+        if (messageIndex === -1) break;
+
+        const message = messages[messageIndex];
+
+        if (message.role === "user") {
+          // User message: delete from this message onwards and resend
+          const userContent = action.content || getTextContent(message);
+
+          // Notify consumer
+          onMessageRegenerate?.(action.messageId, userContent);
+
+          // Delete this message and all after it
+          deleteMessageAndAfter(action.messageId);
+
+          // Re-send the user's message
+          sendMessage(userContent);
+        } else {
+          // Assistant message: delete just this message and resend the preceding user message
+          if (messageIndex > 0) {
+            const previousUserMessage = messages[messageIndex - 1];
+            if (previousUserMessage.role === "user") {
+              const userContent = getTextContent(previousUserMessage);
+
+              // Notify consumer
+              onMessageRegenerate?.(action.messageId, userContent);
+
+              // Delete from the user message onwards (so we regenerate from user's question)
+              deleteMessageAndAfter(previousUserMessage.id);
+
+              // Re-send the user's message
+              sendMessage(userContent);
+            }
+          }
+        }
+        break;
+      }
+    }
   };
 
   // Check if we should show loading indicator
@@ -302,6 +363,26 @@ export function SearchAgent({
                 return null;
               }
 
+              const isUser = message.role === "user";
+              const textContent = getTextContent(message);
+
+              const messageElement = renderMessage ? (
+                renderMessage({
+                  message,
+                  isUser,
+                  toolResultRenderers,
+                  onToolAction: handleToolAction,
+                })
+              ) : (
+                <MessageBubble
+                  message={message}
+                  toolResultRenderers={toolResultRenderers}
+                  onToolAction={handleToolAction}
+                  renderUserContent={renderUserContent}
+                  renderAssistantContent={renderAssistantContent}
+                />
+              );
+
               return (
                 <motion.div
                   key={message.id}
@@ -310,20 +391,14 @@ export function SearchAgent({
                   exit={{ opacity: 0, y: -20 }}
                   transition={{ duration: 0.3 }}
                 >
-                  {renderMessage ? (
-                    renderMessage({
-                      message,
-                      isUser: message.role === "user",
-                      toolResultRenderers,
-                      onToolAction: handleToolAction,
-                    })
-                  ) : (
-                    <MessageBubble
-                      message={message}
-                      toolResultRenderers={toolResultRenderers}
-                      onToolAction={handleToolAction}
-                      renderUserContent={renderUserContent}
-                      renderAssistantContent={renderAssistantContent}
+                  {messageElement}
+                  {enableMessageActions && (
+                    <MessageActions
+                      messageId={message.id}
+                      textContent={textContent}
+                      isUser={isUser}
+                      isProcessing={isProcessing}
+                      onAction={handleMessageAction}
                     />
                   )}
                 </motion.div>

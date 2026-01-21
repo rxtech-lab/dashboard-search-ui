@@ -266,6 +266,37 @@ import { SearchAgent } from "searching-ui";
 | `onClearHistory` | `() => void` | - | Clear history handler |
 | `header` | `SearchAgentHeaderConfig` | - | Header configuration |
 | `input` | `SearchAgentInputConfig` | - | Input configuration |
+| `enableMessageActions` | `boolean` | `true` | Show action buttons on messages (Copy, Regenerate) |
+| `onMessageRegenerate` | `(messageId, content) => void` | - | Called when user regenerates a message |
+
+#### Message Actions
+
+By default, action buttons appear when hovering over messages. The buttons are:
+
+| Action | Available On | Description |
+|--------|-------------|-------------|
+| **Copy** | All messages | Copy message content to clipboard |
+| **Regenerate** | All messages | For user messages: removes this and all subsequent messages, then resends. For assistant messages: regenerates this response |
+
+To disable the action buttons:
+
+```tsx
+<SearchAgent
+  apiEndpoint="/api/search-agent"
+  enableMessageActions={false}
+/>
+```
+
+To handle regenerate events:
+
+```tsx
+<SearchAgent
+  apiEndpoint="/api/search-agent"
+  onMessageRegenerate={(messageId, content) => {
+    console.log("Regenerating:", messageId, content);
+  }}
+/>
+```
 
 #### Input Configuration
 
@@ -466,6 +497,173 @@ import { FileResultCard } from "searching-ui";
   renderIcon={(fileType, mimeType) => (
     <FileIcon type={fileType} />
   )}
+/>
+```
+
+## Custom Rendering
+
+The library provides flexible customization options for rendering messages and tool results.
+
+### Custom User Message Rendering
+
+Use `renderUserContent` to customize how user messages are displayed:
+
+```tsx
+<SearchAgent
+  apiEndpoint="/api/search-agent"
+  renderUserContent={(content) => (
+    <div className="font-medium text-blue-600">
+      {content}
+    </div>
+  )}
+/>
+```
+
+### Custom Assistant Message Rendering
+
+Use `renderAssistantContent` to customize assistant responses (e.g., with a custom Markdown renderer):
+
+```tsx
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
+
+<SearchAgent
+  apiEndpoint="/api/search-agent"
+  renderAssistantContent={(content) => (
+    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+      {content}
+    </ReactMarkdown>
+  )}
+/>
+```
+
+### Custom Tool Result Rendering
+
+Use `toolResultRenderers` to provide custom renderers for specific tool outputs. Each renderer receives the tool's output and an action handler:
+
+```tsx
+import { SearchAgent, ToolResultRendererProps, FileResultCard } from 'searching-ui'
+
+// Custom renderer for file search results
+const FileResultsRenderer = ({ output, onAction }: ToolResultRendererProps) => {
+  const files = output as Array<{ id: string; title: string; fileType: string }>
+
+  return (
+    <div className="grid gap-2">
+      {files.map((file) => (
+        <FileResultCard
+          key={file.id}
+          file={file}
+          onClick={() => onAction?.({ type: 'open', payload: file })}
+        />
+      ))}
+    </div>
+  )
+}
+
+// Custom renderer for a different tool
+const WeatherRenderer = ({ output }: ToolResultRendererProps) => {
+  const data = output as { temp: number; condition: string }
+  return (
+    <div className="p-3 rounded-lg bg-blue-50">
+      <p>{data.temp}°F - {data.condition}</p>
+    </div>
+  )
+}
+
+<SearchAgent
+  apiEndpoint="/api/search-agent"
+  toolResultRenderers={{
+    display_files: FileResultsRenderer,
+    get_weather: WeatherRenderer,
+  }}
+  onToolAction={(action) => {
+    if (action.type === 'open') {
+      router.push(`/files/${action.payload.id}`)
+    }
+  }}
+/>
+```
+
+#### ToolResultRendererProps
+
+| Prop | Type | Description |
+|------|------|-------------|
+| `output` | `unknown` | The tool's output data |
+| `toolCallId` | `string` | Unique identifier for the tool call |
+| `onAction` | `(action: ToolAction) => void` | Trigger actions to parent |
+
+#### ToolAction
+
+```tsx
+interface ToolAction {
+  type: string    // Action type (e.g., 'open', 'download', 'select')
+  payload: unknown // Action data
+}
+```
+
+### Complete Message Override
+
+For full control over message rendering, use `renderMessage` to override the entire message bubble:
+
+```tsx
+import { UIMessage } from 'searching-ui'
+
+<SearchAgent
+  apiEndpoint="/api/search-agent"
+  renderMessage={({ message, getTextContent, getToolCalls }) => {
+    const content = getTextContent(message)
+    const toolCalls = getToolCalls(message)
+
+    return (
+      <div className={message.role === 'user' ? 'text-right' : 'text-left'}>
+        <div className="inline-block p-3 rounded-lg">
+          <p>{content}</p>
+          {toolCalls.map((tool) => (
+            <div key={tool.toolCallId}>
+              Tool: {tool.toolName}
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }}
+/>
+```
+
+### Custom Icons
+
+Customize user and bot avatar icons in `MessageBubble`:
+
+```tsx
+import { User, Sparkles } from 'lucide-react'
+
+<MessageBubble
+  message={message}
+  userIcon={User}
+  botIcon={Sparkles}
+/>
+```
+
+### Using with SearchCommand
+
+When using `SearchCommand` with agent mode, pass custom renderers through `agentConfig`:
+
+```tsx
+<SearchCommand
+  open={open}
+  onOpenChange={setOpen}
+  onSearch={onSearch}
+  enableAgentMode
+  agentConfig={{
+    apiEndpoint: '/api/search-agent',
+    renderUserContent: (content) => <strong>{content}</strong>,
+    renderAssistantContent: (content) => <Markdown>{content}</Markdown>,
+    toolResultRenderers: {
+      display_files: FileResultsRenderer,
+    },
+    onToolAction: handleToolAction,
+  }}
 />
 ```
 

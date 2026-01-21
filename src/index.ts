@@ -36,6 +36,7 @@ export {
   MessageBubble,
   StreamingIndicator,
   FileResultCard,
+  MessageActions,
   type MessageBubbleProps,
   type StreamingIndicatorProps,
   type FileResultCardProps,
@@ -43,6 +44,8 @@ export {
   type ToolResultRenderers,
   type ToolResultRendererProps,
   type ToolAction,
+  type MessageActionsProps,
+  type MessageAction,
 } from "./components/search/SearchAgent";
 
 // Export shadcn UI components
@@ -72,3 +75,26 @@ export {
   DialogTitle,
   DialogDescription,
 } from "./components/ui/dialog";
+export {
+  ContextMenu,
+  ContextMenuTrigger,
+  ContextMenuContent,
+  ContextMenuItem,
+  ContextMenuCheckboxItem,
+  ContextMenuRadioItem,
+  ContextMenuLabel,
+  ContextMenuSeparator,
+  ContextMenuShortcut,
+  ContextMenuGroup,
+  ContextMenuPortal,
+  ContextMenuSub,
+  ContextMenuSubContent,
+  ContextMenuSubTrigger,
+  ContextMenuRadioGroup,
+} from "./components/ui/context-menu";
+export {
+  Tooltip,
+  TooltipProvider,
+  TooltipTrigger,
+  TooltipContent,
+} from "./components/ui/tooltip";

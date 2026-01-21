@@ -9,6 +9,7 @@ export {
   MessageBubble,
   StreamingIndicator,
   FileResultCard,
+  MessageActions,
   type MessageBubbleProps,
   type StreamingIndicatorProps,
   type FileResultCardProps,
@@ -16,4 +17,6 @@ export {
   type ToolResultRenderers,
   type ToolResultRendererProps,
   type ToolAction,
+  type MessageActionsProps,
+  type MessageAction,
 } from "./components";

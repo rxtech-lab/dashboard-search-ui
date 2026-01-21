@@ -99,6 +99,12 @@ export interface UseSearchAgentReturn {
 
   /** Check if message has displayable content */
   hasContent: (message: UIMessage) => boolean;
+
+  /** Delete a message and all messages after it */
+  deleteMessageAndAfter: (messageId: string) => void;
+
+  /** Get message content by ID for editing */
+  getMessageContent: (messageId: string) => string | undefined;
 }
 
 /**
@@ -232,6 +238,27 @@ export function useSearchAgent(
     [getTextContent, getToolCalls]
   );
 
+  // Delete a message and all messages after it (for edit/retry flow)
+  const deleteMessageAndAfter = useCallback(
+    (messageId: string) => {
+      setMessages((prev) => {
+        const idx = prev.findIndex((m) => m.id === messageId);
+        if (idx === -1) return prev;
+        return prev.slice(0, idx);
+      });
+    },
+    [setMessages]
+  );
+
+  // Get message content by ID for editing
+  const getMessageContent = useCallback(
+    (messageId: string): string | undefined => {
+      const message = messages.find((m) => m.id === messageId);
+      return message ? getTextContent(message) : undefined;
+    },
+    [messages, getTextContent]
+  );
+
   return {
     messages,
     status,
@@ -245,5 +272,7 @@ export function useSearchAgent(
     getTextContent,
     getToolCalls,
     hasContent,
+    deleteMessageAndAfter,
+    getMessageContent,
   };
 }

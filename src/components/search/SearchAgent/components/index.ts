@@ -16,3 +16,9 @@ export {
   type FileResultCardProps,
   type FileData,
 } from "./FileResultCard";
+
+export {
+  MessageActions,
+  type MessageActionsProps,
+  type MessageAction,
+} from "./MessageActions";
