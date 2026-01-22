@@ -5,7 +5,6 @@ import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react-swc";
 import tailwindcss from "@tailwindcss/vite";
 import dts from "vite-plugin-dts";
-import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
@@ -24,6 +23,7 @@ function copyPackageJson(): Plugin {
           types: "./index.d.ts",
           import: "./searching-ui.js",
         },
+        "./style.css": "./style.css",
       };
       delete pkg.files;
       delete pkg.scripts;
@@ -49,7 +49,6 @@ export default defineConfig({
       // Types will be generated as separate files instead of bundled
       rollupTypes: false,
     }),
-    cssInjectedByJsPlugin(),
   ],
   resolve: {
     alias: {
@@ -63,6 +62,7 @@ export default defineConfig({
       name: "SearchingUI",
       fileName: "searching-ui",
       formats: ["es"],
+      cssFileName: "style",
     },
     rollupOptions: {
       external: [

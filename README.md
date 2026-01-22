@@ -29,12 +29,22 @@ If you plan to use the AI agent features, you'll also need:
 npm install @ai-sdk/react ai
 ```
 
+### Import Styles
+
+**Important:** You must import the CSS file at the root of your application to ensure styles are loaded before components render:
+
+```tsx
+// In your app entry point (e.g., _app.tsx, layout.tsx, main.tsx)
+import "@rx-lab/dashboard-searching-ui/style.css";
+```
+
 ## Quick Start
 
 ### Basic Search Command
 
 ```tsx
 import { useState } from "react";
+import "@rx-lab/dashboard-searching-ui/style.css";
 import { SearchTrigger, SearchCommand } from "@rx-lab/dashboard-searching-ui";
 
 function App() {
@@ -66,6 +76,7 @@ function App() {
 
 ```tsx
 import { useState } from "react";
+import "@rx-lab/dashboard-searching-ui/style.css";
 import { SearchTrigger, SearchCommand } from "@rx-lab/dashboard-searching-ui";
 
 function App() {
@@ -669,7 +680,11 @@ When using `SearchCommand` with agent mode, pass custom renderers through `agent
 
 ## Styling
 
-The library uses Tailwind CSS v4 and includes shadcn/ui components. Styles are automatically injected when importing components.
+The library uses Tailwind CSS v4 and includes shadcn/ui components. Import the stylesheet at the root of your application:
+
+```tsx
+import "@rx-lab/dashboard-searching-ui/style.css";
+```
 
 To customize the theme, add CSS variables to your root:
 
