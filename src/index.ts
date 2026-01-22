@@ -1,4 +1,5 @@
-// Import styles (will be injected into JS bundle)
+// Import styles - output as separate style.css file
+// Users should import: import "@rx-lab/dashboard-searching-ui/style.css"
 import "./styles.css";
 
 // Export utilities
